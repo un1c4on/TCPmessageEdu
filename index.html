@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerçek Zamanlı Sohbet Arayüzü</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        #app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        #chat-panel {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+        }
+        #user-list-panel {
+            flex-basis: 280px; /* Width of the user list panel */
+            flex-shrink: 0;
+            background-color: #f7f7f7;
+            border-left: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .panel-header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 15px 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        #user-list-header {
+            background-color: #3b73b5;
+        }
+        #status {
+            font-size: 0.8em;
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+        }
+        #status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #e74c3c; /* Red by default */
+            margin-right: 8px;
+            transition: background-color 0.3s;
+        }
+        #chat-box {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        #user-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        #user-list li {
+            padding: 12px 20px;
+            border-bottom: 1px solid #e9e9e9;
+        }
+        #user-list li:last-child {
+            border-bottom: none;
+        }
+        #user-list .username {
+            font-weight: bold;
+            color: #333;
+        }
+        #user-list .ip-address {
+            font-size: 0.85em;
+            color: #777;
+            display: block; /* Puts IP on a new line */
+        }
+        .message {
+            margin: 0 0 12px 0;
+            padding: 8px 12px;
+            border-radius: 18px;
+            max-width: 75%;
+            word-wrap: break-word;
+        }
+        .message:last-child {
+            margin-bottom: 0;
+        }
+        .message-server {
+            font-style: italic;
+            color: #888;
+            text-align: center;
+            background-color: #f1f1f1;
+            align-self: center;
+            max-width: 100%;
+        }
+        .message-user {
+            background-color: #e9e9eb;
+            align-self: flex-start;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+        <div id="chat-panel">
+            <div class="panel-header">
+                <span>TCP/IP Sohbet Odası</span>
+                <div id="status">
+                    <div id="status-indicator"></div>
+                    <span id="status-text">Bağlantı Kuruluyor...</span>
+                </div>
+            </div>
+            <div id="chat-box">
+                <!-- Messages will be appended here by JavaScript -->
+            </div>
+        </div>
+        <div id="user-list-panel">
+            <div class="panel-header" id="user-list-header">
+                <span>Online Kullanıcılar</span>
+            </div>
+            <ul id="user-list">
+                <!-- User list will be populated here -->
+            </ul>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatBox = document.getElementById('chat-box');
+            const statusIndicator = document.getElementById('status-indicator');
+            const statusText = document.getElementById('status-text');
+            const userListElement = document.getElementById('user-list'); // Get reference to user list <ul>
+
+            const wsHost = window.location.hostname || '127.0.0.1';
+            const wsUrl = `ws://${wsHost}:8765`;
+
+            let socket;
+
+            function connect() {
+                socket = new WebSocket(wsUrl);
+
+                socket.onopen = () => {
+                    console.log('WebSocket bağlantısı kuruldu.');
+                    statusIndicator.style.backgroundColor = '#2ecc71'; // Green
+                    statusText.textContent = 'Bağlandı';
+                    addChatMessage('Sunucuya başarıyla bağlanıldı.', true);
+                };
+
+                socket.onmessage = (event) => {
+                    const message = event.data;
+                    console.log('Mesaj alındı:', message);
+
+                    if (message.startsWith('[USER_LIST]:')) {
+                        updateUserList(message);
+                    } else {
+                        addChatMessage(message, false);
+                    }
+                };
+
+                socket.onclose = () => {
+                    console.log('WebSocket bağlantısı kapandı. Tekrar deneniyor...');
+                    statusIndicator.style.backgroundColor = '#e74c3c'; // Red
+                    statusText.textContent = 'Bağlantı Kesildi';
+                    userListElement.innerHTML = '<li>Bağlantı koptu...</li>';
+                    addChatMessage('Sunucu bağlantısı koptu. 5 saniye içinde tekrar denenecek.', true);
+                    setTimeout(connect, 5000);
+                };
+
+                socket.onerror = (error) => {
+                    console.error('WebSocket hatası:', error);
+                    statusIndicator.style.backgroundColor = '#f39c12'; // Orange
+                    statusText.textContent = 'Hata';
+                    addChatMessage('Bağlantı hatası oluştu.', true);
+                };
+            }
+
+            function updateUserList(message) {
+                const usersData = message.substring('[USER_LIST]:'.length);
+                userListElement.innerHTML = ''; // Clear the current list
+
+                if (usersData) {
+                    const users = usersData.split(';');
+                    users.forEach(userData => {
+                        if (!userData) return;
+                        const [username, ip] = userData.split(',');
+                        
+                        const li = document.createElement('li');
+                        li.innerHTML = `<span class="username">${username}</span><span class="ip-address">${ip}</span>`;
+                        userListElement.appendChild(li);
+                    });
+                } else {
+                    userListElement.innerHTML = '<li>Online kullanıcı yok.</li>';
+                }
+            }
+
+            function addChatMessage(text, isServerMessage) {
+                const messageElement = document.createElement('p');
+                messageElement.textContent = text;
+                messageElement.classList.add('message');
+                
+                if (isServerMessage || text.includes('Sunucu:')) {
+                    messageElement.classList.add('message-server');
+                } else {
+                    messageElement.classList.add('message-user');
+                }
+
+                chatBox.appendChild(messageElement);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+
+            connect();
+        });
+    </script>
+
+</body>
+</html>
