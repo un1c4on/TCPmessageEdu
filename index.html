@@ -1,231 +1,916 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerçek Zamanlı Sohbet Arayüzü</title>
+    <title>Network 101 Atölye Rehberi</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f0f2f5;
+        * {
             margin: 0;
-            height: 100vh;
+            padding: 0;
             box-sizing: border-box;
         }
-        #app-container {
-            display: flex;
-            width: 100%;
-            height: 100%;
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
         }
-        #chat-panel {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            background-color: #fff;
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
         }
-        #user-list-panel {
-            flex-basis: 280px; /* Width of the user list panel */
-            flex-shrink: 0;
-            background-color: #f7f7f7;
-            border-left: 1px solid #ddd;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        .panel-header {
-            background-color: #4a90e2;
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 15px 20px;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 30px); }
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
             font-size: 1.2em;
-            font-weight: bold;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .intro h2 {
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        .section {
+            background: #fff;
+            margin-bottom: 30px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+
+        .section-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-shrink: 0;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
         }
-        #user-list-header {
-            background-color: #3b73b5;
-        }
-        #status {
-            font-size: 0.8em;
-            font-weight: normal;
-            display: flex;
-            align-items: center;
-        }
-        #status-indicator {
-            width: 10px;
-            height: 10px;
+
+        .section-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            background-color: #e74c3c; /* Red by default */
-            margin-right: 8px;
-            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-right: 20px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
-        #chat-box {
-            flex-grow: 1;
+
+        .section-title h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .section-title .duration {
+            color: #95a5a6;
+            font-size: 0.9em;
+            font-weight: normal;
+        }
+
+        .tool-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px;
+            box-shadow: 0 3px 10px rgba(245, 87, 108, 0.3);
+        }
+
+        .command-box {
+            background: #1e272e;
+            color: #00ff00;
             padding: 20px;
-            overflow-y: auto;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            position: relative;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
         }
-        #user-list {
+
+        .command-box::before {
+            content: "💻";
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5em;
+        }
+
+        .command-line {
+            margin: 10px 0;
+        }
+
+        .prompt {
+            color: #00d9ff;
+            user-select: none;
+        }
+
+        .output {
+            color: #95a5a6;
+            margin-left: 20px;
+            font-size: 0.9em;
+        }
+
+        .install-box {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #f093fb;
+        }
+
+        .install-box h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .install-steps {
+            counter-reset: step-counter;
+            list-style: none;
+        }
+
+        .install-steps li {
+            counter-increment: step-counter;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 10px;
+            position: relative;
+            padding-left: 60px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .install-steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .tip-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .tip-box::before {
+            content: "💡 İpucu:";
+            font-weight: bold;
+            color: #856404;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .warning-box {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .warning-box::before {
+            content: "⚠️ Dikkat:";
+            font-weight: bold;
+            color: #721c24;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border-left: 5px solid #17a2b8;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .info-box::before {
+            content: "ℹ️ Bilgi:";
+            font-weight: bold;
+            color: #0c5460;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .download-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .download-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        code {
+            background: #f8f9fa;
+            padding: 3px 8px;
+            border-radius: 5px;
+            color: #e83e8c;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 1.1em;
+        }
+
+        .checklist {
             list-style: none;
             padding: 0;
-            margin: 0;
-            overflow-y: auto;
-            flex-grow: 1;
         }
-        #user-list li {
-            padding: 12px 20px;
-            border-bottom: 1px solid #e9e9e9;
+
+        .checklist li {
+            padding: 12px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding-left: 45px;
+            position: relative;
         }
-        #user-list li:last-child {
-            border-bottom: none;
+
+        .checklist li::before {
+            content: "☐";
+            position: absolute;
+            left: 15px;
+            font-size: 1.5em;
+            color: #667eea;
         }
-        #user-list .username {
-            font-weight: bold;
-            color: #333;
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
         }
-        #user-list .ip-address {
-            font-size: 0.85em;
-            color: #777;
-            display: block; /* Puts IP on a new line */
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
         }
-        .message {
-            margin: 0 0 12px 0;
-            padding: 8px 12px;
-            border-radius: 18px;
-            max-width: 75%;
-            word-wrap: break-word;
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
         }
-        .message:last-child {
-            margin-bottom: 0;
+
+        tr:hover {
+            background: #f8f9fa;
         }
-        .message-server {
-            font-style: italic;
-            color: #888;
-            text-align: center;
-            background-color: #f1f1f1;
-            align-self: center;
-            max-width: 100%;
-        }
-        .message-user {
-            background-color: #e9e9eb;
-            align-self: flex-start;
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .section {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>🌐 Network 101 Atölyesi</h1>
+            <p>Ağ Dünyasına Kapsamlı Giriş Rehberi</p>
+        </div>
 
-    <div id="app-container">
-        <div id="chat-panel">
-            <div class="panel-header">
-                <span>TCP/IP Sohbet Odası</span>
-                <div id="status">
-                    <div id="status-indicator"></div>
-                    <span id="status-text">Bağlantı Kuruluyor...</span>
+        <div class="content">
+            <div class="intro">
+                <h2>👋 Hoş Geldiniz!</h2>
+                <p>NEXSUS Yazılım Kulübümüzün "Network 101" atölyesine hoş geldiniz! Bu rehber, atölye sırasında kullanacağımız tüm araçları Windows bilgisayarınıza kurmanıza ve temel komutları denemenize yardımcı olmak için hazırlandı. İnternetin nasıl çalıştığını, veri paketlerinin nasıl yolculuk ettiğini ve ağ güvenliğinin temellerini birlikte keşfedeceğiz.</p>
+                <p><strong>🎯 Hedefimiz:</strong> Bu atölyenin sonunda, ağ iletişiminin temel prensiplerini anlayacak ve profesyonel ağ araçlarını kullanabileceksiniz!</p>
+            </div>
+
+            <div class="tip-box">
+                 Kurulum sırasında sorun yaşarsanız, kulüp yetkililerinden yardım isteyebilirsiniz.
+            </div>
+
+            <!-- Bölüm 1 -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-number">1</div>
+                    <div class="section-title">
+                        <h2>IP Adresleri & DNS</h2>
+                        <span class="duration">⏱️ Süre: 10-15 dakika</span>
+                    </div>
+                </div>
+
+                <p>İnternetin temel yapı taşları olan <strong>IP adresleri</strong> ve <strong>Domain Name System (DNS)</strong> ile tanışacağız. Her cihazın internetteki benzersiz adresi ve bu adreslerin nasıl okunabilir isimlere dönüştüğünü öğreneceğiz.</p>
+
+                <h3>🛠️ Kullanacağımız Araçlar:</h3>
+                <div>
+                    <span class="tool-badge">ipconfig</span>
+                    <span class="tool-badge">ping</span>
+                    <span class="tool-badge">nslookup</span>
+                    <span class="tool-badge">pathping</span>
+                </div>
+
+                <div class="info-box">
+                    Bu araçlar Windows'ta varsayılan olarak yüklüdür. Ekstra kurulum yapmanıza gerek yok!
+                </div>
+
+                <h3>📚 Teorik Bilgi:</h3>
+                <table>
+                    <tr>
+                        <th>Kavram</th>
+                        <th>Açıklama</th>
+                        <th>Örnek</th>
+                    </tr>
+                    <tr>
+                        <td><strong>IP Adresi</strong></td>
+                        <td>Her cihazın ağdaki benzersiz kimliği</td>
+                        <td>192.168.1.1 (IPv4)<br>2001:db8::1 (IPv6)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>DNS</strong></td>
+                        <td>Alan adlarını IP adreslerine çeviren sistem</td>
+                        <td>google.com → 142.250.185.46</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gateway</strong></td>
+                        <td>Yerel ağınızdan internete çıkış kapısı</td>
+                        <td>Genellikle modem/router IP'si</td>
+                    </tr>
+                </table>
+
+                <h3>💻 Pratik Uygulamalar:</h3>
+
+                <h4>1. Komut İstemi'ni Açma</h4>
+                <ul class="install-steps">
+                    <li>Windows tuşuna basın ve <code>cmd</code> yazın</li>
+                    <li>"Komut İstemi" veya "Command Prompt" seçeneğine tıklayın</li>
+                    <li>Alternatif: Windows + R → <code>cmd</code> → Enter</li>
+                </ul>
+
+                <h4>2. ipconfig - Ağ Yapılandırmanızı Görüntüleme</h4>
+                <div class="command-box">
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> ipconfig</div>
+                    <div class="output">
+Windows IP Configuration
+
+Ethernet adapter Ethernet:
+   IPv4 Address. . . . . . . : 192.168.1.100
+   Subnet Mask . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . : 192.168.1.1
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    Daha detaylı bilgi için <code>ipconfig /all</code> komutunu kullanın. Bu size DNS sunucularınızı, MAC adresinizi ve daha fazlasını gösterecektir.
+                </div>
+
+                <h4>3. ping - Hedef Sunucuya Erişimi Test Etme</h4>
+                <div class="command-box">
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> ping google.com</div>
+                    <div class="output">
+Pinging google.com [142.250.185.46] with 32 bytes of data:
+Reply from 142.250.185.46: bytes=32 time=15ms TTL=117
+Reply from 142.250.185.46: bytes=32 time=14ms TTL=117
+
+Ping statistics for 142.250.185.46:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <strong>Ping Nedir?</strong> Hedefe bir paket gönderir ve geri dönüş süresini (latency) ölçer. "TTL" (Time To Live) paketin kaç router'dan geçebileceğini gösterir.
+                </div>
+
+                <h4>4. nslookup - DNS Sorgulaması</h4>
+                <div class="command-box">
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> nslookup google.com</div>
+                    <div class="output">
+Server:  dns.google
+Address:  8.8.8.8
+
+Non-authoritative answer:
+Name:    google.com
+Addresses:  142.250.185.46
+          2a00:1450:4001:801::200e
+                    </div>
+                </div>
+
+                <h4>5. pathping - Gelişmiş Ağ Tanılama</h4>
+                <div class="command-box">
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> pathping google.com</div>
+                </div>
+                <p><code>pathping</code>, ping ve tracert'in birleşimidir. Her hop'taki paket kaybını ve gecikmeyi detaylı gösterir (bu komut birkaç dakika sürebilir).</p>
+
+                <h3>🎯 Atölye Görevleri:</h3>
+                <ul class="checklist">
+                    <li>Kendi IP adresinizi bulun ve not edin</li>
+                    <li>Farklı sitelere (örn: youtube.com, github.com) ping atın ve gecikmeyi karşılaştırın</li>
+                    <li>Favori web sitenizin IP adresini bulun</li>
+                    <li>8.8.8.8 ve 1.1.1.1 DNS sunucularını karşılaştırın</li>
+                </ul>
+            </div>
+
+            <!-- Bölüm 2 -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-number">2</div>
+                    <div class="section-title">
+                        <h2>Router & Yönlendirme</h2>
+                        <span class="duration">⏱️ Süre: 15-20 dakika</span>
+                    </div>
+                </div>
+
+                <p>Veri paketlerinizin hedefe ulaşmak için hangi yollardan geçtiğini keşfedeceğiz. İnternette bir paketi göndermek, gerçek dünyada bir mektup göndermek gibidir - birçok duraktan geçer!</p>
+
+                <h3>🛠️ Kullanacağımız Araçlar:</h3>
+                <div>
+                    <span class="tool-badge">tracert</span>
+                    <span class="tool-badge">traceroute (Linux/Mac)</span>
+                </div>
+
+                <h3>📚 Teorik Bilgi:</h3>
+                <div class="info-box">
+                    <strong>Router (Yönlendirici):</strong> Paketleri bir ağdan diğerine ileten cihazlardır. Evinizdeki modem/router'dan başlayarak, ISP (İnternet Servis Sağlayıcı) router'ları, omurga (backbone) router'ları ve hedefteki sunucuya kadar birçok router'dan geçer.
+                </div>
+
+                <h3>💻 tracert Kullanımı:</h3>
+
+                <div class="command-box">
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> tracert google.com</div>
+                    <div class="output">
+Tracing route to google.com [142.250.185.46]
+over a maximum of 30 hops:
+
+  1    <1 ms    <1 ms    <1 ms  192.168.1.1
+  2     5 ms     4 ms     5 ms  10.20.30.1
+  3    12 ms    11 ms    13 ms  isp-router.net [85.123.45.67]
+  4    18 ms    17 ms    19 ms  google-peer.net [108.170.252.1]
+  5    15 ms    14 ms    16 ms  142.250.185.46
+
+Trace complete.
+                    </div>
+                </div>
+
+                <h4>Tracert Parametreleri:</h4>
+                <div class="command-box">
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> tracert -h 20 google.com</div>
+                    <div class="output"># Maksimum 20 hop ile sınırla</div>
+                    
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> tracert -d google.com</div>
+                    <div class="output"># DNS çözümlemesi yapma (daha hızlı)</div>
+
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> tracert -w 1000 google.com</div>
+                    <div class="output"># Her yanıt için 1000ms (1 saniye) bekle</div>
+                </div>
+
+                <h3>🔍 Sonuçları Anlama:</h3>
+                <table>
+                    <tr>
+                        <th>Sütun</th>
+                        <th>Açıklama</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Hop Numarası</strong></td>
+                        <td>Paketin geçtiği router sırası</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Üç Zaman Değeri</strong></td>
+                        <td>O hop'a üç farklı paketin ulaşma süresi (ms)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>* * *</strong></td>
+                        <td>Router yanıt vermedi (güvenlik duvarı veya yapılandırma)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Request timed out</strong></td>
+                        <td>Paket kayboldu veya yanıt alınamadı</td>
+                    </tr>
+                </table>
+
+                <div class="warning-box">
+                    Bazı router'lar güvenlik nedeniyle ICMP paketlerine yanıt vermez. Bu normal bir durumdur ve ağ bağlantınızda sorun olduğu anlamına gelmez.
+                </div>
+
+                <h3>🎮 Atölye Yarışması: En Kısa Yol!</h3>
+                <div class="tip-box">
+                    Atölyede farklı hedeflere tracert yaparak en az "hop" ile hedefe ulaşanı bulacağız. Coğrafi yakınlık ve ağ altyapısı sonucu etkiler!
+                </div>
+
+                <h3>🎯 Deneyin:</h3>
+                <ul class="checklist">
+                    <li>Türk sitelere ve yabancı sitelere tracert yapın, farkları gözlemleyin</li>
+                    <li>Farklı ülkelerdeki sunuculara ulaşım süresini karşılaştırın</li>
+                    <li>ISP'nizin router'larını tespit edin</li>
+                </ul>
+            </div>
+
+            <!-- Bölüm 3 -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-number">3</div>
+                    <div class="section-title">
+                        <h2>HTTP: Web'in Dili</h2>
+                        <span class="duration">⏱️ Süre: 20-25 dakika</span>
+                    </div>
+                </div>
+            
+                <p>Web sitelerinin tarayıcınızla nasıl "konuştuğunu" öğreneceğiz. <strong>HTTP (Hypertext Transfer Protocol)</strong>, modern internetin temelidir.</p>
+            
+                <h3>📚 Teorik Bilgi:</h3>
+                <div class="info-box">
+                    <strong>HTTP Nedir?</strong> Tarayıcıların web sunucularından sayfa, resim ve veri istemek için kullandığı protokoldür. Bir "istek" (request) ve "yanıt" (response) döngüsüne dayanır.
+                </div>
+            
+                <table>
+                    <tr>
+                        <th>Kavram</th>
+                        <th>Açıklama</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Request (İstek)</strong></td>
+                        <td>Tarayıcının sunucudan bir kaynak (örn: HTML sayfası) istemesi.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Response (Yanıt)</strong></td>
+                        <td>Sunucunun isteğe karşılık olarak gönderdiği veri (sayfa içeriği, durum kodu vb.).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HTTP Metotları</strong></td>
+                        <td>İsteğin amacını belirtir: <code>GET</code> (veri al), <code>POST</code> (veri gönder), <code>PUT</code> (veri güncelle), <code>DELETE</code> (veri sil).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Status Codes (Durum Kodları)</strong></td>
+                        <td>Yanıtın sonucunu belirtir: <code>200 OK</code> (Başarılı), <code>404 Not Found</code> (Bulunamadı), <code>500 Internal Server Error</code> (Sunucu Hatası).</td>
+                    </tr>
+                </table>
+            
+                <h3> Anatomy of an HTTP Request</h3>
+                <div class="command-box">
+                    <div class="output" style="color: #00ff00;">
+GET /sayfa.html HTTP/1.1<br>
+Host: www.example.com<br>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) ...<br>
+Accept: text/html,*/*<br>
+Accept-Language: tr-TR,tr;q=0.9<br>
+                    </div>
+                </div>
+            
+                <h3> Anatomy of an HTTP Response</h3>
+                <div class="command-box">
+                    <div class="output" style="color: #00ff00;">
+HTTP/1.1 200 OK<br>
+Date: Sat, 29 Nov 2025 10:00:00 GMT<br>
+Server: Apache<br>
+Content-Type: text/html; charset=UTF-8<br>
+Content-Length: 1270<br>
+<br>
+&lt;!DOCTYPE html&gt;<br>
+&lt;html&gt;<br>
+&lt;body&gt;<br>
+&lt;h1&gt;Merhaba Dünya!&lt;/h1&gt;<br>
+&lt;/body&gt;<br>
+&lt;/html&gt;
+                    </div>
+                </div>
+            
+                <div class="tip-box">
+                    Tarayıcınızda F12 tuşuna basarak "Geliştirici Araçları"nı açın ve "Ağ" (Network) sekmesine gidin. Bir web sitesini ziyaret ettiğinizde yapılan tüm HTTP isteklerini ve yanıtlarını canlı olarak görebilirsiniz.
                 </div>
             </div>
-            <div id="chat-box">
-                <!-- Messages will be appended here by JavaScript -->
+
+            <!-- Bölüm 4 -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-number">4</div>
+                    <div class="section-title">
+                        <h2>Paket Analizi: Wireshark</h2>
+                        <span class="duration">⏱️ Süre: 30-40 dakika</span>
+                    </div>
+                </div>
+
+                <p>Ağınızda akan verileri gerçek zamanlı olarak yakalayıp analiz edeceğiz. Bu, bir ağ mühendisinin en güçlü aracıdır! Wireshark ile ağınızdaki her bir "fısıltıyı" bile duyabilirsiniz.</p>
+
+                <h3>📚 Wireshark Nedir?</h3>
+                <div class="info-box">
+                    Wireshark, ağ trafiğini paket seviyesinde yakalayan ve analiz eden açık kaynaklı bir araçtır. Siber güvenlik uzmanları, ağ yöneticileri ve geliştiriciler tarafından sorun giderme, analiz, yazılım ve iletişim protokolü geliştirme ve eğitim için yaygın olarak kullanılır.
+                </div>
+
+                <h3>🛠️ Wireshark Kurulumu:</h3>
+
+                <div class="install-box">
+                    <h4>📥 Wireshark İndirme ve Kurulum</h4>
+                    
+                    <ol class="install-steps">
+                        <li><a href="https://www.wireshark.org/download.html" target="_blank" class="download-button">🔗 Wireshark İndirme Sayfası</a></li>
+                        <li><strong>Windows x64 Installer</strong> seçeneğini bulun ve indirin.</li>
+                        <li>İndirilen .exe dosyasını yönetici olarak çalıştırın.</li>
+                        <li>Kurulum sihirbazında tüm varsayılan seçenekleri kabul edin.</li>
+                        <li><strong>ÖNEMLİ:</strong> "Install Npcap" seçeneğinin işaretli olduğundan emin olun. Npcap, Wireshark'ın ağ kartınızdan paketleri yakalamasını sağlayan sürücüdür. Onsuz Wireshark çalışmaz!</li>
+                        <li>Npcap kurulum ekranı geldiğinde "Install Npcap in WinPcap API-compatible Mode" seçeneğini işaretleyin. Bu, eski uygulamalarla uyumluluğu artırır.</li>
+                        <li>Kurulumu tamamlayın ve bilgisayarı yeniden başlatın (Npcap sürücüsünün düzgün çalışması için gereklidir).</li>
+                    </ol>
+                </div>
+
+                <div class="warning-box">
+                    Wireshark'ı kullanmak için yönetici yetkileri gerekebilir. Ayrıca, başkalarının trafiğini izniniz olmadan dinlemek yasa dışıdır ve etik değildir. Bu aracı sadece kendi ağınızı ve kendi trafiğinizi analiz etmek için kullanın!
+                </div>
+
+                <h3>🎓 Wireshark Temel Kullanımı:</h3>
+
+                <h4>1. Arayüz Seçme ve Yakalamayı Başlatma</h4>
+                <ul class="install-steps">
+                    <li>Wireshark'ı açın. Ana ekranda bilgisayarınızdaki ağ arayüzlerinin (Wi-Fi, Ethernet vb.) bir listesini göreceksiniz.</li>
+                    <li>İnternete bağlanmak için kullandığınız arayüzü seçin (genellikle yanında bir trafik grafiği olan).</li>
+                    <li>Seçimi yaptıktan sonra sol üstteki mavi "köpekbalığı yüzgeci" ikonuna tıklayarak paket yakalamayı başlatın.</li>
+                </ul>
+
+                <h4>2. En Popüler Filtreler</h4>
+                <p>Yakalanan binlerce paket arasında kaybolmamak için filtreleme yapmak şarttır. İşte en kullanışlı filtreler:</p>
+                
+                <table>
+                    <tr>
+                        <th>Filtre</th>
+                        <th>Açıklama</th>
+                    </tr>
+                    <tr>
+                        <td><code>http</code></td>
+                        <td>Sadece şifrelenmemiş web trafiğini gösterir.</td>
+                    </tr>
+                    <tr>
+                        <td><code>dns</code></td>
+                        <td>Alan adı çözümleme isteklerini (örn: google.com -> IP adresi) gösterir.</td>
+                    </tr>
+                    <tr>
+                        <td><code>ip.addr == 8.8.8.8</code></td>
+                        <td>Belirtilen IP adresine giden veya bu adresten gelen tüm paketleri gösterir.</td>
+                    </tr>
+                    <tr>
+                        <td><code>tcp.port == 443</code></td>
+                        <td>Belirli bir TCP portuna ait trafiği gösterir (443, HTTPS için standart porttur).</td>
+                    </tr>
+                    <tr>
+                        <td><code>http.request.method == "POST"</code></td>
+                        <td>Sunucuya veri gönderen HTTP POST isteklerini yakalar (örn: form gönderimleri).</td>
+                    </tr>
+                     <tr>
+                        <td><code>icmp</code></td>
+                        <td>Ping (ICMP) istek ve yanıtlarını gösterir.</td>
+                    </tr>
+                </table>
+
+                <div class="tip-box">
+                    Filtreleri birleştirmek için <code>and</code> (ve), <code>or</code> (veya), <code>not</code> (değil) operatörlerini kullanabilirsiniz.
+                    <br>Örnek: <code>dns and ip.addr == 8.8.8.8</code> (Sadece Google'ın DNS sunucusuna yapılan sorguları göster).
+                </div>
+
+                <h4>3. HTTP Trafiğini İnceleme (Güvenlik Demou)</h4>
+                <div class="info-box">
+                    <strong>Atölyede yapacağımız güvenlik demosu:</strong>
+                    <br>1. Wireshark'ta paket yakalamayı başlatın.
+                    <br>2. Tarayıcınızda <strong>şifrelenmemiş (HTTP)</strong> bir test web sitesine gidin ve bir forma kullanıcı adı/şifre girin.
+                    <br>3. Wireshark'ta filtre çubuğuna <code>http.request.method == "POST"</code> yazın ve Enter'a basın.
+                    <br>4. Yakalanan POST isteği paketini bulun ve seçin.
+                    <br>5. Paket detayları (orta) penceresinde "Hypertext Transfer Protocol" katmanını genişletin.
+                    <br>6. Form verilerinin (kullanıcı adı ve şifre) düz metin olarak gönderildiğini göreceksiniz!
+                    <br><br><strong>Bu deneyin ana dersi:</strong> Asla <code>http://</code> ile başlayan bir siteye hassas bilgilerinizi girmeyin. Her zaman <code>https://</code> (güvenli) olduğundan emin olun!
+                </div>
+
+                <h4>4. TCP 3-Yönlü El Sıkışmayı (3-Way Handshake) Gözlemleme</h4>
+                <p>Güvenilir bir bağlantı olan TCP'nin nasıl kurulduğunu görelim:</p>
+                <ul class="install-steps">
+                   <li>Yeni bir yakalama başlatın ve bir web sitesine gidin.</li>
+                   <li>Filtre çubuğuna <code>tcp.flags.syn == 1 and tcp.flags.ack == 0</code> yazın. Bu, bağlantı başlatan ilk paketi (SYN) bulur.</li>
+                   <li>Bu pakete sağ tıklayın ve "Follow > TCP Stream" seçin.</li>
+                   <li>Wireshark size tüm konuşmayı gösterecektir. İlk üç paketin <strong>[SYN]</strong>, <strong>[SYN, ACK]</strong>, ve <strong>[ACK]</strong> olduğunu göreceksiniz. Bu, iki bilgisayarın güvenilir bir iletişim kanalı kurmak için yaptığı "el sıkışma" işlemidir.</li>
+                </ul>
+
+                <h3>🔍 İleri Seviye Özellikler:</h3>
+
+                <h4>Follow Stream (Akışı Takip Et)</h4>
+                <p>Bir konuşmanın (örneğin bir HTTP isteği ve yanıtı) tüm içeriğini birleştirilmiş bir şekilde görmek için, ilgili pakete sağ tıklayıp <strong>Follow > TCP Stream</strong> (veya HTTP Stream) seçeneğini kullanabilirsiniz. Bu, dağınık paketler yerine tüm sohbeti okumanızı sağlar.</p>
+
+                <h4>Statistics (İstatistikler)</h4>
+                <p>Ağınızda neler olup bittiğini daha geniş bir perspektiften görmek için <strong>Statistics</strong> menüsünü kullanın. Örneğin, <strong>Statistics > Protocol Hierarchy</strong> ağınızdaki trafiğin ne kadarının HTTP, ne kadarının DNS, ne kadarının diğer protokoller olduğunu yüzdesel olarak gösterir.</p>
+
+                <h3>🎯 Atölye Uygulamaları:</h3>
+                <ul class="checklist">
+                    <li>Kendi DNS sorgularınızı Wireshark'ta yakalayın. Hangi sitelere istek attığınızı görün.</li>
+                    <li>HTTP ve HTTPS trafiği arasındaki temel farkı (birinin okunabilir, diğerinin şifreli olması) gözlemleyin.</li>
+                    <li>Bir YouTube videosu izlerken hangi protokollerin (TCP, UDP) kullanıldığını keşfedin.</li>
+                    <li><code>ping google.com</code> komutunu çalıştırırken Wireshark'ta <code>icmp</code> filtresi ile paketleri yakalayın.</li>
+                    <li>TCP 3-way handshake'i canlı olarak izleyin.</li>
+                </ul>
             </div>
+
+            <!-- Bonus Bölüm -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-number">🌟</div>
+                    <div class="section-title">
+                        <h2>Bonus: İleri Seviye Araçlar</h2>
+                        <span class="duration">⏱️ İsteğe bağlı</span>
+                    </div>
+                </div>
+
+                <h3>🚀 curl - HTTP İstekleri için Komut Satırı Aracı</h3>
+                <p>Web sitelerine tarayıcı kullanmadan istek gönderin. API'leri test etmek ve web sunucularının başlıklarını (headers) incelemek için harikadır.</p>
+                <div class="command-box">
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> curl -I https://api.github.com</div>
+                    <div class="output"># Sadece başlıkları (headers) al</div>
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> curl -X POST -d "user=test" https://httpbin.org/post</div>
+                    <div class="output"># POST isteği gönder</div>
+                </div>
+
+                <h3>🔥 arp - ARP Tablosunu Görüntüleme</h3>
+                <p>Yerel ağınızdaki cihazların IP-MAC adres eşleştirmelerini görün. "Hangi IP adresi hangi fiziksel cihaza ait?" sorusunun cevabıdır.</p>
+                <div class="command-box">
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> arp -a</div>
+                </div>
+
+                <h3>🌐 route - Yönlendirme Tablosu</h3>
+                <p>Bilgisayarınızın paketleri hangi ağ geçidine (gateway) göndereceğini nasıl bildiğini gösteren tablodur.</p>
+                <div class="command-box">
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> route print</div>
+                </div>
+            </div>
+
+            <!-- Hazırlık Kontrol Listesi -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-number">✓</div>
+                    <div class="section-title">
+                        <h2>Atölye Öncesi Kontrol Listesi</h2>
+                    </div>
+                </div>
+
+                <h3>📋 Kurulum Kontrolleri:</h3>
+                <ul class="checklist">
+                    <li>Komut İstemi'ni açıp <code>ipconfig</code> komutunu çalıştırabildim</li>
+                    <li><code>ping google.com</code> komutu başarıyla çalışıyor</li>
+                    <li><code>tracert google.com</code> komutu çalışıyor</li>
+                    <li><code>nslookup google.com</code> DNS çözümlemesi yapıyor</li>
+                    <li>Wireshark kuruldu ve Npcap yüklü</li>
+                    <li>Wireshark'ı açıp ağ arayüzümü görebiliyorum</li>
+                    <li>Wireshark'ta paket yakalama testi yaptım</li>
+                </ul>
+
+                <h3>🎓 Öğrendiklerim:</h3>
+                <ul class="checklist">
+                    <li>IP adresi ve DNS kavramlarını anladım</li>
+                    <li>Ping ve latency kavramlarını öğrendim</li>
+                    <li>Router ve hop kavramlarını biliyorum</li>
+                    <li>HTTP istek/yanıt yapısını anladım</li>
+                    <li>HTTP ve HTTPS arasındaki farkı biliyorum</li>
+                    <li>Paket analizinin ne işe yaradığını biliyorum</li>
+                </ul>
+
+                <div class="tip-box">
+                    Tüm kontrolleri geçtiyseniz, atölyeye hazırsınız! Herhangi bir sorun yaşarsanız, kulübün Discord kanalından destek alabilirsiniz.
+                </div>
+            </div>
+
+            <!-- Yararlı Kaynaklar -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-number">📚</div>
+                    <div class="section-title">
+                        <h2>Yararlı Kaynaklar ve Daha Fazla Öğren</h2>
+                    </div>
+                </div>
+
+                <h3>🌐 Online Kaynaklar:</h3>
+                <ul>
+                    <li><a href="https://www.cloudflare.com/learning/" target="_blank">Cloudflare Learning Center</a> - Ağ ve internet kavramları</li>
+                    <li><a href="https://www.wireshark.org/docs/" target="_blank">Wireshark Resmi Dokümantasyonu</a></li>
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP" target="_blank">MDN Web Docs - HTTP</a></li>
+                    <li><a href="https://tools.ietf.org/" target="_blank">IETF RFCs</a> - İnternet standartları</li>
+                </ul>
+
+                <h3>🎮 İnteraktif Öğrenme:</h3>
+                <ul>
+                    <li><a href="https://www.khanacademy.org/computing/computers-and-internet" target="_blank">Khan Academy - Internet 101</a></li>
+                    <li><a href="https://tryhackme.com/room/networkfundamentals" target="_blank">TryHackMe - Network Fundamentals</a></li>
+                    <li><a href="https://packetlife.net/library/cheat-sheets/" target="_blank">PacketLife Cheat Sheets</a></li>
+                </ul>
+
+                <h3>📺 Video Kaynakları:</h3>
+                <ul>
+                    <li>YouTube: NetworkChuck - Networking temelleri</li>
+                    <li>YouTube: Professor Messer - Network+ dersleri</li>
+                    <li>YouTube: David Bombal - Pratik ağ uygulamaları</li>
+                </ul>
+            </div>
+
         </div>
-        <div id="user-list-panel">
-            <div class="panel-header" id="user-list-header">
-                <span>Online Kullanıcılar</span>
-            </div>
-            <ul id="user-list">
-                <!-- User list will be populated here -->
-            </ul>
+
+        <div class="footer">
+            <p>🎉 Tüm adımları tamamladıysanız, atölyeye hazırsınız demektir!</p>
+            <p>Sorularınız için: <strong>NEXSUS Whatsapp</strong></p>
+            <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8;">Network 101 Atölyesi - 2025</p>
         </div>
     </div>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const chatBox = document.getElementById('chat-box');
-            const statusIndicator = document.getElementById('status-indicator');
-            const statusText = document.getElementById('status-text');
-            const userListElement = document.getElementById('user-list'); // Get reference to user list <ul>
-
-            const wsHost = window.location.hostname || '127.0.0.1';
-            const wsUrl = `ws://${wsHost}:8765`;
-
-            let socket;
-
-            function connect() {
-                socket = new WebSocket(wsUrl);
-
-                socket.onopen = () => {
-                    console.log('WebSocket bağlantısı kuruldu.');
-                    statusIndicator.style.backgroundColor = '#2ecc71'; // Green
-                    statusText.textContent = 'Bağlandı';
-                    addChatMessage('Sunucuya başarıyla bağlanıldı.', true);
-                };
-
-                socket.onmessage = (event) => {
-                    const message = event.data;
-                    console.log('Mesaj alındı:', message);
-
-                    if (message.startsWith('[USER_LIST]:')) {
-                        updateUserList(message);
-                    } else {
-                        addChatMessage(message, false);
-                    }
-                };
-
-                socket.onclose = () => {
-                    console.log('WebSocket bağlantısı kapandı. Tekrar deneniyor...');
-                    statusIndicator.style.backgroundColor = '#e74c3c'; // Red
-                    statusText.textContent = 'Bağlantı Kesildi';
-                    userListElement.innerHTML = '<li>Bağlantı koptu...</li>';
-                    addChatMessage('Sunucu bağlantısı koptu. 5 saniye içinde tekrar denenecek.', true);
-                    setTimeout(connect, 5000);
-                };
-
-                socket.onerror = (error) => {
-                    console.error('WebSocket hatası:', error);
-                    statusIndicator.style.backgroundColor = '#f39c12'; // Orange
-                    statusText.textContent = 'Hata';
-                    addChatMessage('Bağlantı hatası oluştu.', true);
-                };
-            }
-
-            function updateUserList(message) {
-                const usersData = message.substring('[USER_LIST]:'.length);
-                userListElement.innerHTML = ''; // Clear the current list
-
-                if (usersData) {
-                    const users = usersData.split(';');
-                    users.forEach(userData => {
-                        if (!userData) return;
-                        const [username, ip] = userData.split(',');
-                        
-                        const li = document.createElement('li');
-                        li.innerHTML = `<span class="username">${username}</span><span class="ip-address">${ip}</span>`;
-                        userListElement.appendChild(li);
-                    });
-                } else {
-                    userListElement.innerHTML = '<li>Online kullanıcı yok.</li>';
-                }
-            }
-
-            function addChatMessage(text, isServerMessage) {
-                const messageElement = document.createElement('p');
-                messageElement.textContent = text;
-                messageElement.classList.add('message');
-                
-                if (isServerMessage || text.includes('Sunucu:')) {
-                    messageElement.classList.add('message-server');
-                } else {
-                    messageElement.classList.add('message-user');
-                }
-
-                chatBox.appendChild(messageElement);
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }
-
-            connect();
-        });
-    </script>
-
 </body>
 </html>

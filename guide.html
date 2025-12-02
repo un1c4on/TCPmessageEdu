@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network 101 Atölye Rehberi</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+        }
+        .section {
+            background-color: #fff;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            display: flex;
+            align-items: center;
+        }
+        .section-title span {
+            background-color: #0056b3;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+        code {
+            background-color: #e8e8e8;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: "Courier New", Courier, monospace;
+        }
+        .command-prompt {
+            background-color: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: "Courier New", Courier, monospace;
+            white-space: pre-wrap;
+        }
+        .command-prompt::before {
+            content: "C:\\Users\\Network101> ";
+            color: #0f0;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .tool-download {
+            background-color: #e7f3ff;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Network 101 Atölyesi Hazırlık Rehberi</h1>
+    <p>Merhaba! Yazılım Kulübümüzün "Network 101" atölyesine hoş geldiniz. Bu rehber, atölye sırasında kullanacağımız araçları Windows bilgisayarınıza kurmanıza ve temel komutları denemenize yardımcı olmak için hazırlandı. Lütfen atölye gününden önce aşağıdaki adımları tamamladığınızdan emin olun.</p>
+
+    <!-- Bölüm 1: IP & DNS -->
+    <div class="section">
+        <h2 class="section-title"><span>10 dk</span>IP & DNS: Adresleri Çözümleme</h2>
+        <p>Bu bölümde, internetin temel yapı taşları olan IP adreslerini ve Alan Adı Sistemi'ni (DNS) keşfedeceğiz. Bu araçlar Windows'ta zaten yüklüdür, herhangi bir kurulum yapmanıza gerek yok.</p>
+        
+        <h3>Gerekli Araçlar:</h3>
+        <ul>
+            <li><strong>Komut İstemi (Command Prompt):</strong> Bu araçları kullanacağımız terminal. Başlat menüsüne <code>cmd</code> yazarak açabilirsiniz.</li>
+            <li><code>ping</code>: Bir hedefe ulaşıp ulaşamadığımızı ve ne kadar sürede ulaştığımızı test eder.</li>
+            <li><code>nslookup</code>: Bir alan adının (örn: google.com) IP adresini bulur.</li>
+            <li><code>ipconfig</code>: Kendi bilgisayarınızın ağ yapılandırmasını (IP adresi, ağ geçidi vb.) gösterir.</li>
+        </ul>
+
+        <h3>Windows Turu: Komutları Deneyelim!</h3>
+        <p>1. <strong>Komut İstemi'ni açın.</strong></p>
+        <p>2. Kendi ağ bilgilerinizi görmek için aşağıdaki komutu yazın ve Enter'a basın:</p>
+        <div class="command-prompt">ipconfig</div>
+        <p><br>3. Google'ın sunucularına erişip erişemediğinizi test edin:</p>
+        <div class="command-prompt">ping google.com</div>
+        <p><br>4. Google'ın IP adresini öğrenin:</p>
+        <div class="command-prompt">nslookup google.com</div>
+    </div>
+
+    <!-- Bölüm 2: Router & Yol -->
+    <div class="section">
+        <h2 class="section-title"><span>15 dk</span>Router & Yol: Paketin Yolculuğu</h2>
+        <p>Veri paketlerinizin hedefe ulaşmak için hangi yollardan geçtiğini hiç merak ettiniz mi? <code>tracert</code> komutu ile bu yolculuğu adım adım izleyeceğiz.</p>
+        
+        <h3>Gerekli Araç:</h3>
+        <ul>
+            <li><code>tracert</code>: (traceroute'un Windows versiyonu) Bir paketin hedefe giderken geçtiği yönlendiricileri (router) listeler. Bu da Windows'ta yerleşik olarak bulunur.</li>
+        </ul>
+
+        <h3>Windows Turu: Rotayı Takip Edelim!</h3>
+        <p>1. Komut İstemi'nde, google.com'a giden yolu izlemek için şu komutu çalıştırın:</p>
+        <div class="command-prompt">tracert google.com</div>
+        <p><br>Atölyede en az "hop" (atlama) ile hedefe kimin ulaşacağını görmek için bir yarışma yapacağız!</p>
+    </div>
+
+    <!-- Bölüm 3: Portlar & Soketler -->
+    <div class="section">
+        <h2 class="section-title"><span>20 dk</span>Portlar & Soketler: Netcat ile Sohbet</h2>
+        <p>Bilgisayarların belirli hizmetler için kullandığı "kapıları" (portları) ve bu kapılardan nasıl iletişim kurduğumuzu öğreneceğiz. Kendi basit sohbet uygulamamızı yapacağız.</p>
+        
+        <h3>Gerekli Araç:</h3>
+        <ul>
+            <li><code>netcat (nc)</code>: Ağ bağlantıları üzerinden veri okumak ve yazmak için kullanılan çok yönlü bir araç.</li>
+        </ul>
+
+        <h3>Windows Turu: Netcat Kurulumu</h3>
+        <div class="tool-download">
+            <p>Netcat, Windows'ta varsayılan olarak gelmez. Güvenilir bir versiyonu olan <strong>ncat</strong>'i Nmap ile birlikte indireceğiz.</p>
+            <ol>
+                <li><a href="https://nmap.org/download.html" target="_blank">Nmap'in resmi indirme sayfasına gidin.</a></li>
+                <li>"Latest stable release" başlığı altındaki "Windows self-installer" (<code>nmap-&lt;versiyon&gt;-setup.exe</code>) dosyasını indirin.</li>
+                <li>İndirilen dosyayı çalıştırın ve kurulum sihirbazını takip edin. Varsayılan ayarlar genellikle yeterlidir. Kurulum sırasında <strong>ncat</strong>'in de seçili olduğundan emin olun.</li>
+                <li>Kurulum tamamlandıktan sonra Komut İstemi'ni yeniden başlatın. <code>ncat</code> komutunun çalışıp çalışmadığını test etmek için şunu yazabilirsiniz:</li>
+            </ol>
+            <div class="command-prompt">ncat --version</div>
+            <p><br>Eğer bir versiyon numarası görüyorsanız, kurulum başarılıdır!</p>
+        </div>
+    </div>
+
+    <!-- Bölüm 4: Paket Analizi -->
+    <div class="section">
+        <h2 class="section-title"><span>25 dk</span>Paket Analizi: Wireshark ile Trafiği İzleme</h2>
+        <p>Ağınızda akan verileri canlı olarak yakalayıp analiz edeceğiz. Bu, ağ iletişiminin en derin seviyesine inmemizi sağlayacak.</p>
+
+        <h3>Gerekli Araç:</h3>
+        <ul>
+            <li><strong>Wireshark:</strong> Dünyanın en popüler ağ protokolü analizörüdür.</li>
+        </ul>
+
+        <h3>Windows Turu: Wireshark Kurulumu</h3>
+        <div class="tool-download">
+            <p>Wireshark'ı kurarak ağ trafiğini profesyoneller gibi izlemeye hazır olalım.</p>
+            <ol>
+                <li><a href="https://www.wireshark.org/download.html" target="_blank">Wireshark'ın resmi indirme sayfasına gidin.</a></li>
+                <li>"Windows Installer (64-bit)" seçeneğini bulun ve indirin.</li>
+                <li>İndirilen dosyayı çalıştırın. Kurulum sırasında <strong>"Npcap"</strong> adlı bir bileşenin kurulması istenecektir. Bu, Wireshark'ın ağ trafiğini yakalaması için gereklidir. <strong>Bu bileşeni mutlaka kurun.</strong></li>
+                <li>Kurulumu varsayılan ayarlarla tamamlayın.</li>
+            </ol>
+            <p>Kurulumdan sonra Başlat menüsünde Wireshark'ı bulup çalıştırabilirsiniz. Atölyede, şifrelenmemiş bir HTTP sitesine girip parolamızın ağda nasıl göründüğünü yakalayacağız!</p>
+        </div>
+    </div>
+
+    <p style="text-align:center; margin-top: 30px;">Tüm adımları tamamladıysanız, atölyeye hazırsınız demektir. Görüşmek üzere!</p>
+
+</body>
+</html>
