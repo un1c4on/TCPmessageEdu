@@ -393,28 +393,108 @@
                  Kurulum sırasında sorun yaşarsanız, kulüp yetkililerinden yardım isteyebilirsiniz.
             </div>
 
-            <!-- Bölüm 1 -->
+            <!-- BÖLÜM 1: FİZİKSEL & VERİ BAĞLANTI KATMANI -->
             <div class="section">
                 <div class="section-header">
                     <div class="section-number">1</div>
                     <div class="section-title">
-                        <h2>IP Adresleri & DNS</h2>
+                        <h2>Katman 1 & 2: Fiziksel Adresleme</h2>
                         <span class="duration">⏱️ Süre: 10-15 dakika</span>
                     </div>
                 </div>
 
-                <p>İnternetin temel yapı taşları olan <strong>IP adresleri</strong> ve <strong>Domain Name System (DNS)</strong> ile tanışacağız. Her cihazın internetteki benzersiz adresi ve bu adreslerin nasıl okunabilir isimlere dönüştüğünü öğreneceğiz.</p>
+                <p>Her şeyin başladığı yer! Verinin fiziksel olarak nasıl iletildiğini ve yerel ağdaki cihazların birbirini nasıl "tanıdığını" öğreneceğiz. Bu katmanlar, dijital bitlerin kablolar, fiber optikler veya radyo dalgaları üzerinden nasıl seyahat ettiğini yönetir.</p>
+
+                <h3>📚 Teorik Bilgi:</h3>
+                <table>
+                    <tr>
+                        <th>Kavram</th>
+                        <th>Açıklama</th>
+                        <th>Örnek</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Fiziksel Katman (L1)</strong></td>
+                        <td>Verinin fiziksel olarak (elektrik sinyali, ışık) iletilmesinden sorumlu katman.</td>
+                        <td>Ethernet kablosu, Wi-Fi sinyalleri</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Veri Bağlantı Katmanı (L2)</strong></td>
+                        <td>Aynı yerel ağdaki cihazlar arasında hatasız veri transferini sağlar.</td>
+                        <td>Switch, Ağ Kartı (NIC)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MAC Adresi</strong></td>
+                        <td>Ağ donanımının benzersiz, üretici tarafından atanmış fiziksel adresi. Değiştirilemez.</td>
+                        <td>00:1A:2B:3C:4D:5E</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ARP (Address Resolution Protocol)</strong></td>
+                        <td>Bir IP adresinin hangi MAC adresine ait olduğunu bulmak için kullanılır.</td>
+                        <td>"192.168.1.1 kimde?" → "Bende! MAC adresim 00:1A:.. "</td>
+                    </tr>
+                </table>
+
+                <h3>🛠️ Kullanacağımız Araçlar:</h3>
+                <div>
+                    <span class="tool-badge">arp</span>
+                    <span class="tool-badge">ipconfig /all</span>
+                </div>
+
+                <h3>💻 Pratik Uygulamalar:</h3>
+                <h4>1. MAC Adresinizi Bulma</h4>
+                <p><code>ipconfig /all</code> komutu, IP adresi bilgilerinin yanı sıra her ağ bağdaştırıcısının "Physical Address" yani MAC adresini de listeler.</p>
+                <div class="command-box">
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> ipconfig /all</div>
+                    <div class="output">
+Ethernet adapter Ethernet:
+   ...
+   Physical Address. . . . . . : 00-1A-2B-3C-4D-5E
+   ...
+                    </div>
+                </div>
+
+                <h4>2. ARP Tablosunu Görüntüleme</h4>
+                <p>Bilgisayarınızın yerel ağda iletişim kurduğu diğer cihazların IP-MAC adres eşleştirmelerini görmek için <code>arp -a</code> komutunu kullanın. Bu tablo, bilgisayarınızın "adres defteri" gibidir.</p>
+                <div class="command-box">
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> arp -a</div>
+                    <div class="output">
+Interface: 192.168.1.100 --- 0x15
+  Internet Address      Physical Address      Type
+  192.168.1.1           a0-b1-c2-d3-e4-f5     dynamic
+  192.168.1.105         f5-e4-d3-c2-b1-a0     dynamic
+  224.0.0.22            01-00-5e-00-00-16     static
+                    </div>
+                </div>
+                <div class="info-box">
+                    <strong>ARP Tablosu Ne İşe Yarar?</strong> Bilgisayarınız yerel ağdaki başka bir IP'ye (örn: 192.168.1.1) paket göndermek istediğinde, paketi doğru cihaza ulaştırmak için o IP'nin MAC adresini bilmesi gerekir. ARP tablosuna bakar, eğer kayıt varsa onu kullanır. Yoksa ağa "Bu IP kimde?" diye bağırır (ARP Request) ve ilgili cihaz yanıt verir (ARP Reply).
+                </div>
+
+                <h3>🎯 Atölye Görevleri:</h3>
+                <ul class="checklist">
+                    <li>Kendi bilgisayarınızın Wi-Fi ve Ethernet MAC adreslerini bulun.</li>
+                    <li>Modeminizin (Gateway) MAC adresini ARP tablosunda bulun.</li>
+                    <li>Yerel ağdaki başka bir bilgisayara ping attıktan sonra ARP tablosunun güncellendiğini gözlemleyin.</li>
+                </ul>
+            </div>
+
+            <!-- BÖLÜM 2: AĞ KATMANI -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-number">2</div>
+                    <div class="section-title">
+                        <h2>Katman 3: Ağ (IP Adresleri ve Yönlendirme)</h2>
+                        <span class="duration">⏱️ Süre: 20-25 dakika</span>
+                    </div>
+                </div>
+
+                <p>Farklı ağlar arasındaki iletişimin temel taşı olan <strong>IP adresleri</strong> ve paketlerin hedefe ulaşmak için izlediği yolları (yönlendirme) keşfedeceğiz. İnternetin "posta servisi" bu katmanda çalışır.</p>
 
                 <h3>🛠️ Kullanacağımız Araçlar:</h3>
                 <div>
                     <span class="tool-badge">ipconfig</span>
                     <span class="tool-badge">ping</span>
-                    <span class="tool-badge">nslookup</span>
+                    <span class="tool-badge">tracert</span>
                     <span class="tool-badge">pathping</span>
-                </div>
-
-                <div class="info-box">
-                    Bu araçlar Windows'ta varsayılan olarak yüklüdür. Ekstra kurulum yapmanıza gerek yok!
                 </div>
 
                 <h3>📚 Teorik Bilgi:</h3>
@@ -425,236 +505,193 @@
                         <th>Örnek</th>
                     </tr>
                     <tr>
-                        <td><strong>IP Adresi</strong></td>
-                        <td>Her cihazın ağdaki benzersiz kimliği</td>
-                        <td>192.168.1.1 (IPv4)<br>2001:db8::1 (IPv6)</td>
+                        <td><strong>IP Adresi (L3)</strong></td>
+                        <td>Her cihazın ağdaki mantıksal adresi. Değişebilir.</td>
+                        <td>192.168.1.1 (IPv4)</td>
                     </tr>
                     <tr>
-                        <td><strong>DNS</strong></td>
-                        <td>Alan adlarını IP adreslerine çeviren sistem</td>
-                        <td>google.com → 142.250.185.46</td>
+                        <td><strong>Router (Yönlendirici)</strong></td>
+                        <td>Paketleri bir ağdan diğerine (örn: ev ağından internete) ileten cihaz.</td>
+                        <td>Evdeki modem, ISP router'ları</td>
                     </tr>
                     <tr>
-                        <td><strong>Gateway</strong></td>
-                        <td>Yerel ağınızdan internete çıkış kapısı</td>
+                        <td><strong>Gateway (Ağ Geçidi)</strong></td>
+                        <td>Yerel ağınızdan dış dünyaya (internete) çıkış kapısı.</td>
                         <td>Genellikle modem/router IP'si</td>
                     </tr>
                 </table>
 
                 <h3>💻 Pratik Uygulamalar:</h3>
-
-                <h4>1. Komut İstemi'ni Açma</h4>
-                <ul class="install-steps">
-                    <li>Windows tuşuna basın ve <code>cmd</code> yazın</li>
-                    <li>"Komut İstemi" veya "Command Prompt" seçeneğine tıklayın</li>
-                    <li>Alternatif: Windows + R → <code>cmd</code> → Enter</li>
-                </ul>
-
-                <h4>2. ipconfig - Ağ Yapılandırmanızı Görüntüleme</h4>
+                <h4>1. Ağ Yapılandırmanızı Görüntüleme: <code>ipconfig</code></h4>
                 <div class="command-box">
                     <div class="command-line"><span class="prompt">C:\Users\Network101></span> ipconfig</div>
                     <div class="output">
 Windows IP Configuration
-
-Ethernet adapter Ethernet:
    IPv4 Address. . . . . . . : 192.168.1.100
    Subnet Mask . . . . . . . : 255.255.255.0
    Default Gateway . . . . . : 192.168.1.1
                     </div>
                 </div>
 
-                <div class="tip-box">
-                    Daha detaylı bilgi için <code>ipconfig /all</code> komutunu kullanın. Bu size DNS sunucularınızı, MAC adresinizi ve daha fazlasını gösterecektir.
-                </div>
-
-                <h4>3. ping - Hedef Sunucuya Erişimi Test Etme</h4>
+                <h4>2. Hedefe Erişimi Test Etme: <code>ping</code></h4>
+                <p><code>ping</code>, hedefe küçük bir paket gönderir ve geri dönüş süresini (gecikme/latency) ölçer. Bağlantı sorunlarını teşhis etmek için ilk adımdır.</p>
                 <div class="command-box">
                     <div class="command-line"><span class="prompt">C:\Users\Network101></span> ping google.com</div>
                     <div class="output">
 Pinging google.com [142.250.185.46] with 32 bytes of data:
 Reply from 142.250.185.46: bytes=32 time=15ms TTL=117
-Reply from 142.250.185.46: bytes=32 time=14ms TTL=117
-
-Ping statistics for 142.250.185.46:
-    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
                     </div>
                 </div>
 
-                <div class="info-box">
-                    <strong>Ping Nedir?</strong> Hedefe bir paket gönderir ve geri dönüş süresini (latency) ölçer. "TTL" (Time To Live) paketin kaç router'dan geçebileceğini gösterir.
-                </div>
-
-                <h4>4. nslookup - DNS Sorgulaması</h4>
-                <div class="command-box">
-                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> nslookup google.com</div>
-                    <div class="output">
-Server:  dns.google
-Address:  8.8.8.8
-
-Non-authoritative answer:
-Name:    google.com
-Addresses:  142.250.185.46
-          2a00:1450:4001:801::200e
-                    </div>
-                </div>
-
-                <h4>5. pathping - Gelişmiş Ağ Tanılama</h4>
-                <div class="command-box">
-                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> pathping google.com</div>
-                </div>
-                <p><code>pathping</code>, ping ve tracert'in birleşimidir. Her hop'taki paket kaybını ve gecikmeyi detaylı gösterir (bu komut birkaç dakika sürebilir).</p>
-
-                <h3>🎯 Atölye Görevleri:</h3>
-                <ul class="checklist">
-                    <li>Kendi IP adresinizi bulun ve not edin</li>
-                    <li>Farklı sitelere (örn: youtube.com, github.com) ping atın ve gecikmeyi karşılaştırın</li>
-                    <li>Favori web sitenizin IP adresini bulun</li>
-                    <li>8.8.8.8 ve 1.1.1.1 DNS sunucularını karşılaştırın</li>
-                </ul>
-            </div>
-
-            <!-- Bölüm 2 -->
-            <div class="section">
-                <div class="section-header">
-                    <div class="section-number">2</div>
-                    <div class="section-title">
-                        <h2>Router & Yönlendirme</h2>
-                        <span class="duration">⏱️ Süre: 15-20 dakika</span>
-                    </div>
-                </div>
-
-                <p>Veri paketlerinizin hedefe ulaşmak için hangi yollardan geçtiğini keşfedeceğiz. İnternette bir paketi göndermek, gerçek dünyada bir mektup göndermek gibidir - birçok duraktan geçer!</p>
-
-                <h3>🛠️ Kullanacağımız Araçlar:</h3>
-                <div>
-                    <span class="tool-badge">tracert</span>
-                    <span class="tool-badge">traceroute (Linux/Mac)</span>
-                </div>
-
-                <h3>📚 Teorik Bilgi:</h3>
-                <div class="info-box">
-                    <strong>Router (Yönlendirici):</strong> Paketleri bir ağdan diğerine ileten cihazlardır. Evinizdeki modem/router'dan başlayarak, ISP (İnternet Servis Sağlayıcı) router'ları, omurga (backbone) router'ları ve hedefteki sunucuya kadar birçok router'dan geçer.
-                </div>
-
-                <h3>💻 tracert Kullanımı:</h3>
-
+                <h4>3. Paketin İzlediği Yolu Bulma: <code>tracert</code></h4>
+                <p>Veri paketlerinizin hedefe ulaşmak için hangi router'lardan geçtiğini adım adım gösterir.</p>
                 <div class="command-box">
                     <div class="command-line"><span class="prompt">C:\Users\Network101></span> tracert google.com</div>
                     <div class="output">
-Tracing route to google.com [142.250.185.46]
-over a maximum of 30 hops:
-
+Tracing route to google.com [142.250.185.46] over a maximum of 30 hops:
   1    <1 ms    <1 ms    <1 ms  192.168.1.1
   2     5 ms     4 ms     5 ms  10.20.30.1
   3    12 ms    11 ms    13 ms  isp-router.net [85.123.45.67]
-  4    18 ms    17 ms    19 ms  google-peer.net [108.170.252.1]
-  5    15 ms    14 ms    16 ms  142.250.185.46
-
-Trace complete.
+  ...
                     </div>
                 </div>
-
-                <h4>Tracert Parametreleri:</h4>
-                <div class="command-box">
-                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> tracert -h 20 google.com</div>
-                    <div class="output"># Maksimum 20 hop ile sınırla</div>
-                    
-                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> tracert -d google.com</div>
-                    <div class="output"># DNS çözümlemesi yapma (daha hızlı)</div>
-
-                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> tracert -w 1000 google.com</div>
-                    <div class="output"># Her yanıt için 1000ms (1 saniye) bekle</div>
-                </div>
-
-                <h3>🔍 Sonuçları Anlama:</h3>
-                <table>
-                    <tr>
-                        <th>Sütun</th>
-                        <th>Açıklama</th>
-                    </tr>
-                    <tr>
-                        <td><strong>Hop Numarası</strong></td>
-                        <td>Paketin geçtiği router sırası</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Üç Zaman Değeri</strong></td>
-                        <td>O hop'a üç farklı paketin ulaşma süresi (ms)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>* * *</strong></td>
-                        <td>Router yanıt vermedi (güvenlik duvarı veya yapılandırma)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Request timed out</strong></td>
-                        <td>Paket kayboldu veya yanıt alınamadı</td>
-                    </tr>
-                </table>
-
                 <div class="warning-box">
-                    Bazı router'lar güvenlik nedeniyle ICMP paketlerine yanıt vermez. Bu normal bir durumdur ve ağ bağlantınızda sorun olduğu anlamına gelmez.
+                    Bazı router'lar güvenlik nedeniyle ICMP paketlerine yanıt vermez (* * * olarak görünür). Bu normal bir durumdur.
                 </div>
 
-                <h3>🎮 Atölye Yarışması: En Kısa Yol!</h3>
-                <div class="tip-box">
-                    Atölyede farklı hedeflere tracert yaparak en az "hop" ile hedefe ulaşanı bulacağız. Coğrafi yakınlık ve ağ altyapısı sonucu etkiler!
+                <h4>4. Gelişmiş Ağ Tanılama: <code>pathping</code></h4>
+                <p><code>pathping</code>, <code>ping</code> ve <code>tracert</code>'in birleşimidir. Her bir router'daki paket kaybını ve gecikmeyi daha detaylı analiz eder (bu komut birkaç dakika sürebilir).</p>
+                <div class="command-box">
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> pathping google.com</div>
                 </div>
 
-                <h3>🎯 Deneyin:</h3>
+                <h3>🎯 Atölye Görevleri:</h3>
                 <ul class="checklist">
-                    <li>Türk sitelere ve yabancı sitelere tracert yapın, farkları gözlemleyin</li>
-                    <li>Farklı ülkelerdeki sunuculara ulaşım süresini karşılaştırın</li>
-                    <li>ISP'nizin router'larını tespit edin</li>
+                    <li>Kendi IP adresinizi ve Ağ Geçidinizi (Gateway) bulun.</li>
+                    <li>Farklı sitelere (örn: youtube.com, github.com) ping atın ve gecikmeyi karşılaştırın.</li>
+                    <li>Türk sitelere ve yabancı sitelere <code>tracert</code> yapın, yol farklarını gözlemleyin.</li>
                 </ul>
             </div>
 
-            <!-- Bölüm 3 -->
+            <!-- BÖLÜM 3: TAŞIMA KATMANI -->
             <div class="section">
                 <div class="section-header">
                     <div class="section-number">3</div>
                     <div class="section-title">
-                        <h2>HTTP: Web'in Dili</h2>
-                        <span class="duration">⏱️ Süre: 20-25 dakika</span>
+                        <h2>Katman 4: Taşıma (TCP & UDP)</h2>
+                        <span class="duration">⏱️ Süre: 15-20 dakika</span>
                     </div>
                 </div>
             
-                <p>Web sitelerinin tarayıcınızla nasıl "konuştuğunu" öğreneceğiz. <strong>HTTP (Hypertext Transfer Protocol)</strong>, modern internetin temelidir.</p>
+                <p>Verinin bilgisayarlar arasında nasıl taşınacağını belirleyen iki temel protokolü, <strong>TCP</strong> ve <strong>UDP</strong>'yi öğreneceğiz. Biri güvenilirliğe, diğeri hıza odaklanır.</p>
             
                 <h3>📚 Teorik Bilgi:</h3>
                 <div class="info-box">
-                    <strong>HTTP Nedir?</strong> Tarayıcıların web sunucularından sayfa, resim ve veri istemek için kullandığı protokoldür. Bir "istek" (request) ve "yanıt" (response) döngüsüne dayanır.
+                    <strong>Port Numaraları:</strong> Bir bilgisayardaki farklı uygulamalara gelen verileri ayırt etmek için kullanılır. IP adresi binanın adresi ise, port numarası daire numarasıdır. (Örn: HTTP Port 80, HTTPS Port 443).
                 </div>
             
                 <table>
                     <tr>
                         <th>Kavram</th>
                         <th>Açıklama</th>
+                        <th>Kullanım Alanı</th>
                     </tr>
                     <tr>
-                        <td><strong>Request (İstek)</strong></td>
-                        <td>Tarayıcının sunucudan bir kaynak (örn: HTML sayfası) istemesi.</td>
+                        <td><strong>TCP (Transmission Control Protocol)</strong></td>
+                        <td>Güvenilir, sıralı ve hata kontrollü veri aktarımı sağlar. Bağlantı kurulmasını gerektirir. Kaybolan paketleri yeniden gönderir.</td>
+                        <td>Web (HTTP/S), E-posta (SMTP), Dosya Transferi (FTP)</td>
                     </tr>
                     <tr>
-                        <td><strong>Response (Yanıt)</strong></td>
-                        <td>Sunucunun isteğe karşılık olarak gönderdiği veri (sayfa içeriği, durum kodu vb.).</td>
-                    </tr>
-                    <tr>
-                        <td><strong>HTTP Metotları</strong></td>
-                        <td>İsteğin amacını belirtir: <code>GET</code> (veri al), <code>POST</code> (veri gönder), <code>PUT</code> (veri güncelle), <code>DELETE</code> (veri sil).</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Status Codes (Durum Kodları)</strong></td>
-                        <td>Yanıtın sonucunu belirtir: <code>200 OK</code> (Başarılı), <code>404 Not Found</code> (Bulunamadı), <code>500 Internal Server Error</code> (Sunucu Hatası).</td>
+                        <td><strong>UDP (User Datagram Protocol)</strong></td>
+                        <td>Hızlı ama güvenilir olmayan veri aktarımı. Bağlantı kurmaz, paket kaybını umursamaz.</td>
+                        <td>Online Oyunlar, Video Konferans (Zoom), DNS</td>
                     </tr>
                 </table>
             
+                <h3>🤝 TCP 3-Yönlü El Sıkışma (3-Way Handshake)</h3>
+                <p>TCP'nin güvenilir bir bağlantıyı nasıl başlattığını gösteren temel süreçtir. İki bilgisayarın konuşmaya başlamadan önce anlaştığı bir "merhabalaşma" ritüelidir.</p>
+                <ol class="install-steps">
+                    <li><strong>[SYN]</strong> İstemci, sunucuya bir bağlantı başlatma isteği (SYNchronize) gönderir. "Merhaba, konuşabilir miyiz?"</li>
+                    <li><strong>[SYN, ACK]</strong> Sunucu, isteği aldığını onaylar (ACKnowledge) ve kendi bağlantı isteğini (SYN) gönderir. "Merhaba, evet konuşabiliriz. Sen de hazır mısın?"</li>
+                    <li><strong>[ACK]</strong> İstemci, sunucunun yanıtını aldığını onaylar (ACK). "Evet, hazırım!"</li>
+                </ol>
+                <p>Bu üç adımdan sonra bağlantı kurulur ve veri aktarımı başlar. Bu süreci daha sonra Wireshark ile canlı olarak gözlemleyeceğiz.</p>
+            
+                <h3>🎯 Atölye Görevleri:</h3>
+                <ul class="checklist">
+                    <li>Web'de gezinirken neden TCP'nin tercih edildiğini düşünün.</li>
+                    <li>Online bir oyun oynarken neden UDP'nin daha mantıklı olduğunu tartışın.</li>
+                    <li>Hangi durumlarda paket kaybının kabul edilebilir, hangilerinde kabul edilemez olduğunu düşünün.</li>
+                </ul>
+            </div>
+
+            <!-- BÖLÜM 4: UYGULAMA KATMANI -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-number">4</div>
+                    <div class="section-title">
+                        <h2>Katman 7: Uygulama (HTTP & DNS)</h2>
+                        <span class="duration">⏱️ Süre: 20-25 dakika</span>
+                    </div>
+                </div>
+            
+                <p>Kullanıcı olarak doğrudan etkileşimde bulunduğumuz katman! Web sitelerinin tarayıcınızla nasıl "konuştuğunu" (<strong>HTTP</strong>) ve alan adlarının IP adreslerine nasıl çevrildiğini (<strong>DNS</strong>) öğreneceğiz.</p>
+            
+                <h3>🛠️ Kullanacağımız Araçlar:</h3>
+                <div>
+                    <span class="tool-badge">nslookup</span>
+                    <span class="tool-badge">Tarayıcı Geliştirici Araçları (F12)</span>
+                </div>
+
+                <h3>📚 Teorik Bilgi:</h3>
+                <table>
+                    <tr>
+                        <th>Kavram</th>
+                        <th>Açıklama</th>
+                    </tr>
+                    <tr>
+                        <td><strong>DNS (Domain Name System)</strong></td>
+                        <td>İnsanların okuyabildiği alan adlarını (google.com) makinelerin anladığı IP adreslerine (142.250.185.46) çeviren sistem. İnternetin telefon rehberidir.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HTTP (Hypertext Transfer Protocol)</strong></td>
+                        <td>Tarayıcıların web sunucularından sayfa, resim ve veri istemek için kullandığı protokoldür. Bir "istek" (request) ve "yanıt" (response) döngüsüne dayanır.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HTTP Metotları</strong></td>
+                        <td>İsteğin amacını belirtir: <code>GET</code> (veri al), <code>POST</code> (veri gönder).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Durum Kodları</strong></td>
+                        <td>Yanıtın sonucunu belirtir: <code>200 OK</code> (Başarılı), <code>404 Not Found</code> (Bulunamadı).</td>
+                    </tr>
+                </table>
+            
+                <h3>💻 Pratik Uygulamalar:</h3>
+                <h4>1. DNS Sorgulaması: <code>nslookup</code></h4>
+                <p>Bir web sitesinin IP adresini öğrenmek için kullanılır.</p>
+                <div class="command-box">
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> nslookup google.com</div>
+                    <div class="output">
+Server:  dns.google
+Address:  8.8.8.8
+
+Name:    google.com
+Addresses:  142.250.185.46
+                    </div>
+                </div>
+
+                <h4>2. HTTP Trafiğini İnceleme: Tarayıcı Araçları (F12)</h4>
+                <div class="tip-box">
+                    Tarayıcınızda <strong>F12</strong> tuşuna basarak "Geliştirici Araçları"nı açın ve "Ağ" (Network) sekmesine gidin. Bir web sitesini ziyaret ettiğinizde yapılan tüm HTTP isteklerini ve yanıtlarını (başlıklar, durum kodları, içerik) canlı olarak görebilirsiniz.
+                </div>
+
                 <h3> Anatomy of an HTTP Request</h3>
                 <div class="command-box">
                     <div class="output" style="color: #00ff00;">
 GET /sayfa.html HTTP/1.1<br>
 Host: www.example.com<br>
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) ...<br>
-Accept: text/html,*/*<br>
-Accept-Language: tr-TR,tr;q=0.9<br>
+User-Agent: Mozilla/5.0 ...<br>
                     </div>
                 </div>
             
@@ -662,74 +699,61 @@ Accept-Language: tr-TR,tr;q=0.9<br>
                 <div class="command-box">
                     <div class="output" style="color: #00ff00;">
 HTTP/1.1 200 OK<br>
-Date: Sat, 29 Nov 2025 10:00:00 GMT<br>
-Server: Apache<br>
-Content-Type: text/html; charset=UTF-8<br>
-Content-Length: 1270<br>
+Content-Type: text/html<br>
 <br>
-&lt;!DOCTYPE html&gt;<br>
-&lt;html&gt;<br>
-&lt;body&gt;<br>
-&lt;h1&gt;Merhaba Dünya!&lt;/h1&gt;<br>
-&lt;/body&gt;<br>
-&lt;/html&gt;
+&lt;h1&gt;Merhaba Dünya!&lt;/h1&gt;
                     </div>
                 </div>
             
-                <div class="tip-box">
-                    Tarayıcınızda F12 tuşuna basarak "Geliştirici Araçları"nı açın ve "Ağ" (Network) sekmesine gidin. Bir web sitesini ziyaret ettiğinizde yapılan tüm HTTP isteklerini ve yanıtlarını canlı olarak görebilirsiniz.
-                </div>
+                <h3>🎯 Atölye Görevleri:</h3>
+                <ul class="checklist">
+                    <li>Favori web sitenizin IP adresini <code>nslookup</code> ile bulun.</li>
+                    <li>Tarayıcınızın Ağ sekmesinde bir siteye girerken kaç tane HTTP isteği yapıldığını sayın.</li>
+                    <li>Bir resmin <code>GET</code> isteğini bulun ve durum kodunun <code>200 OK</code> olduğunu doğrulayın.</li>
+                </ul>
             </div>
 
-            <!-- Bölüm 4 -->
+            <!-- BÖLÜM 5: PAKET ANALİZİ -->
             <div class="section">
                 <div class="section-header">
-                    <div class="section-number">4</div>
+                    <div class="section-number">5</div>
                     <div class="section-title">
                         <h2>Paket Analizi: Wireshark</h2>
                         <span class="duration">⏱️ Süre: 30-40 dakika</span>
                     </div>
                 </div>
 
-                <p>Ağınızda akan verileri gerçek zamanlı olarak yakalayıp analiz edeceğiz. Bu, bir ağ mühendisinin en güçlü aracıdır! Wireshark ile ağınızdaki her bir "fısıltıyı" bile duyabilirsiniz.</p>
+                <p>Tüm bu katmanların pratikte nasıl çalıştığını görme zamanı! Ağınızda akan verileri gerçek zamanlı olarak yakalayıp analiz edeceğiz. Bu, bir ağ mühendisinin en güçlü aracıdır!</p>
 
                 <h3>📚 Wireshark Nedir?</h3>
                 <div class="info-box">
-                    Wireshark, ağ trafiğini paket seviyesinde yakalayan ve analiz eden açık kaynaklı bir araçtır. Siber güvenlik uzmanları, ağ yöneticileri ve geliştiriciler tarafından sorun giderme, analiz, yazılım ve iletişim protokolü geliştirme ve eğitim için yaygın olarak kullanılır.
+                    Wireshark, ağ trafiğini paket seviyesinde yakalayan ve analiz eden açık kaynaklı bir araçtır. Siber güvenlik uzmanları, ağ yöneticileri ve geliştiriciler tarafından sorun giderme, analiz ve eğitim için yaygın olarak kullanılır.
                 </div>
 
                 <h3>🛠️ Wireshark Kurulumu:</h3>
-
                 <div class="install-box">
                     <h4>📥 Wireshark İndirme ve Kurulum</h4>
-                    
                     <ol class="install-steps">
                         <li><a href="https://www.wireshark.org/download.html" target="_blank" class="download-button">🔗 Wireshark İndirme Sayfası</a></li>
                         <li><strong>Windows x64 Installer</strong> seçeneğini bulun ve indirin.</li>
-                        <li>İndirilen .exe dosyasını yönetici olarak çalıştırın.</li>
-                        <li>Kurulum sihirbazında tüm varsayılan seçenekleri kabul edin.</li>
-                        <li><strong>ÖNEMLİ:</strong> "Install Npcap" seçeneğinin işaretli olduğundan emin olun. Npcap, Wireshark'ın ağ kartınızdan paketleri yakalamasını sağlayan sürücüdür. Onsuz Wireshark çalışmaz!</li>
-                        <li>Npcap kurulum ekranı geldiğinde "Install Npcap in WinPcap API-compatible Mode" seçeneğini işaretleyin. Bu, eski uygulamalarla uyumluluğu artırır.</li>
-                        <li>Kurulumu tamamlayın ve bilgisayarı yeniden başlatın (Npcap sürücüsünün düzgün çalışması için gereklidir).</li>
+                        <li>Kurulum sihirbazında, <strong>"Install Npcap"</strong> seçeneğinin işaretli olduğundan emin olun. Bu, Wireshark'ın paketleri yakalamasını sağlayan sürücüdür.</li>
+                        <li>Kurulumu tamamlayın.</li>
                     </ol>
                 </div>
 
                 <div class="warning-box">
-                    Wireshark'ı kullanmak için yönetici yetkileri gerekebilir. Ayrıca, başkalarının trafiğini izniniz olmadan dinlemek yasa dışıdır ve etik değildir. Bu aracı sadece kendi ağınızı ve kendi trafiğinizi analiz etmek için kullanın!
+                    Wireshark'ı kullanmak için yönetici yetkileri gerekebilir. Bu aracı sadece kendi ağınızı ve kendi trafiğinizi analiz etmek için kullanın!
                 </div>
 
                 <h3>🎓 Wireshark Temel Kullanımı:</h3>
-
                 <h4>1. Arayüz Seçme ve Yakalamayı Başlatma</h4>
                 <ul class="install-steps">
-                    <li>Wireshark'ı açın. Ana ekranda bilgisayarınızdaki ağ arayüzlerinin (Wi-Fi, Ethernet vb.) bir listesini göreceksiniz.</li>
-                    <li>İnternete bağlanmak için kullandığınız arayüzü seçin (genellikle yanında bir trafik grafiği olan).</li>
-                    <li>Seçimi yaptıktan sonra sol üstteki mavi "köpekbalığı yüzgeci" ikonuna tıklayarak paket yakalamayı başlatın.</li>
+                    <li>Wireshark'ı açın. İnternete bağlanmak için kullandığınız arayüzü (Wi-Fi veya Ethernet) çift tıklayın.</li>
+                    <li>Paket yakalama otomatik olarak başlayacaktır. Durdurmak için kırmızı kare butona basın.</li>
                 </ul>
 
                 <h4>2. En Popüler Filtreler</h4>
-                <p>Yakalanan binlerce paket arasında kaybolmamak için filtreleme yapmak şarttır. İşte en kullanışlı filtreler:</p>
-                
+                <p>Yakalanan binlerce paket arasında kaybolmamak için filtreleme yapmak şarttır:</p>
                 <table>
                     <tr>
                         <th>Filtre</th>
@@ -741,67 +765,28 @@ Content-Length: 1270<br>
                     </tr>
                     <tr>
                         <td><code>dns</code></td>
-                        <td>Alan adı çözümleme isteklerini (örn: google.com -> IP adresi) gösterir.</td>
+                        <td>Alan adı çözümleme isteklerini gösterir.</td>
                     </tr>
                     <tr>
                         <td><code>ip.addr == 8.8.8.8</code></td>
-                        <td>Belirtilen IP adresine giden veya bu adresten gelen tüm paketleri gösterir.</td>
+                        <td>Belirtilen IP'ye giden/gelen paketleri gösterir.</td>
                     </tr>
                     <tr>
                         <td><code>tcp.port == 443</code></td>
-                        <td>Belirli bir TCP portuna ait trafiği gösterir (443, HTTPS için standart porttur).</td>
+                        <td>HTTPS trafiğini gösterir.</td>
                     </tr>
                     <tr>
-                        <td><code>http.request.method == "POST"</code></td>
-                        <td>Sunucuya veri gönderen HTTP POST isteklerini yakalar (örn: form gönderimleri).</td>
-                    </tr>
-                     <tr>
                         <td><code>icmp</code></td>
                         <td>Ping (ICMP) istek ve yanıtlarını gösterir.</td>
                     </tr>
                 </table>
 
-                <div class="tip-box">
-                    Filtreleri birleştirmek için <code>and</code> (ve), <code>or</code> (veya), <code>not</code> (değil) operatörlerini kullanabilirsiniz.
-                    <br>Örnek: <code>dns and ip.addr == 8.8.8.8</code> (Sadece Google'ın DNS sunucusuna yapılan sorguları göster).
-                </div>
-
-                <h4>3. HTTP Trafiğini İnceleme (Güvenlik Demou)</h4>
-                <div class="info-box">
-                    <strong>Atölyede yapacağımız güvenlik demosu:</strong>
-                    <br>1. Wireshark'ta paket yakalamayı başlatın.
-                    <br>2. Tarayıcınızda <strong>şifrelenmemiş (HTTP)</strong> bir test web sitesine gidin ve bir forma kullanıcı adı/şifre girin.
-                    <br>3. Wireshark'ta filtre çubuğuna <code>http.request.method == "POST"</code> yazın ve Enter'a basın.
-                    <br>4. Yakalanan POST isteği paketini bulun ve seçin.
-                    <br>5. Paket detayları (orta) penceresinde "Hypertext Transfer Protocol" katmanını genişletin.
-                    <br>6. Form verilerinin (kullanıcı adı ve şifre) düz metin olarak gönderildiğini göreceksiniz!
-                    <br><br><strong>Bu deneyin ana dersi:</strong> Asla <code>http://</code> ile başlayan bir siteye hassas bilgilerinizi girmeyin. Her zaman <code>https://</code> (güvenli) olduğundan emin olun!
-                </div>
-
-                <h4>4. TCP 3-Yönlü El Sıkışmayı (3-Way Handshake) Gözlemleme</h4>
-                <p>Güvenilir bir bağlantı olan TCP'nin nasıl kurulduğunu görelim:</p>
-                <ul class="install-steps">
-                   <li>Yeni bir yakalama başlatın ve bir web sitesine gidin.</li>
-                   <li>Filtre çubuğuna <code>tcp.flags.syn == 1 and tcp.flags.ack == 0</code> yazın. Bu, bağlantı başlatan ilk paketi (SYN) bulur.</li>
-                   <li>Bu pakete sağ tıklayın ve "Follow > TCP Stream" seçin.</li>
-                   <li>Wireshark size tüm konuşmayı gösterecektir. İlk üç paketin <strong>[SYN]</strong>, <strong>[SYN, ACK]</strong>, ve <strong>[ACK]</strong> olduğunu göreceksiniz. Bu, iki bilgisayarın güvenilir bir iletişim kanalı kurmak için yaptığı "el sıkışma" işlemidir.</li>
-                </ul>
-
-                <h3>🔍 İleri Seviye Özellikler:</h3>
-
-                <h4>Follow Stream (Akışı Takip Et)</h4>
-                <p>Bir konuşmanın (örneğin bir HTTP isteği ve yanıtı) tüm içeriğini birleştirilmiş bir şekilde görmek için, ilgili pakete sağ tıklayıp <strong>Follow > TCP Stream</strong> (veya HTTP Stream) seçeneğini kullanabilirsiniz. Bu, dağınık paketler yerine tüm sohbeti okumanızı sağlar.</p>
-
-                <h4>Statistics (İstatistikler)</h4>
-                <p>Ağınızda neler olup bittiğini daha geniş bir perspektiften görmek için <strong>Statistics</strong> menüsünü kullanın. Örneğin, <strong>Statistics > Protocol Hierarchy</strong> ağınızdaki trafiğin ne kadarının HTTP, ne kadarının DNS, ne kadarının diğer protokoller olduğunu yüzdesel olarak gösterir.</p>
-
                 <h3>🎯 Atölye Uygulamaları:</h3>
                 <ul class="checklist">
-                    <li>Kendi DNS sorgularınızı Wireshark'ta yakalayın. Hangi sitelere istek attığınızı görün.</li>
-                    <li>HTTP ve HTTPS trafiği arasındaki temel farkı (birinin okunabilir, diğerinin şifreli olması) gözlemleyin.</li>
-                    <li>Bir YouTube videosu izlerken hangi protokollerin (TCP, UDP) kullanıldığını keşfedin.</li>
-                    <li><code>ping google.com</code> komutunu çalıştırırken Wireshark'ta <code>icmp</code> filtresi ile paketleri yakalayın.</li>
-                    <li>TCP 3-way handshake'i canlı olarak izleyin.</li>
+                    <li><code>ping google.com</code> komutunu çalıştırırken <code>icmp</code> filtresi ile paketleri yakalayın.</li>
+                    <li>Kendi DNS sorgularınızı <code>dns</code> filtresi ile yakalayın.</li>
+                    <li>Daha önce öğrendiğimiz TCP 3-yönlü el sıkışmayı (SYN, SYN/ACK, ACK) canlı olarak izleyin. (Filtre: <code>tcp.flags.syn == 1</code>)</li>
+                    <li><strong>Güvenlik Demosu:</strong> Şifrelenmemiş (HTTP) bir siteye girilen form verilerinin <code>http</code> filtresi ile nasıl okunabildiğini gözlemleyin.</li>
                 </ul>
             </div>
 
@@ -816,18 +801,10 @@ Content-Length: 1270<br>
                 </div>
 
                 <h3>🚀 curl - HTTP İstekleri için Komut Satırı Aracı</h3>
-                <p>Web sitelerine tarayıcı kullanmadan istek gönderin. API'leri test etmek ve web sunucularının başlıklarını (headers) incelemek için harikadır.</p>
+                <p>Web sitelerine tarayıcı kullanmadan istek gönderin. API'leri test etmek için harikadır.</p>
                 <div class="command-box">
                     <div class="command-line"><span class="prompt">C:\Users\Network101></span> curl -I https://api.github.com</div>
                     <div class="output"># Sadece başlıkları (headers) al</div>
-                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> curl -X POST -d "user=test" https://httpbin.org/post</div>
-                    <div class="output"># POST isteği gönder</div>
-                </div>
-
-                <h3>🔥 arp - ARP Tablosunu Görüntüleme</h3>
-                <p>Yerel ağınızdaki cihazların IP-MAC adres eşleştirmelerini görün. "Hangi IP adresi hangi fiziksel cihaza ait?" sorusunun cevabıdır.</p>
-                <div class="command-box">
-                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> arp -a</div>
                 </div>
 
                 <h3>🌐 route - Yönlendirme Tablosu</h3>
@@ -848,28 +825,19 @@ Content-Length: 1270<br>
 
                 <h3>📋 Kurulum Kontrolleri:</h3>
                 <ul class="checklist">
-                    <li>Komut İstemi'ni açıp <code>ipconfig</code> komutunu çalıştırabildim</li>
+                    <li>Komut İstemi'ni açıp <code>ipconfig</code> ve <code>arp -a</code> komutlarını çalıştırabildim</li>
                     <li><code>ping google.com</code> komutu başarıyla çalışıyor</li>
                     <li><code>tracert google.com</code> komutu çalışıyor</li>
-                    <li><code>nslookup google.com</code> DNS çözümlemesi yapıyor</li>
-                    <li>Wireshark kuruldu ve Npcap yüklü</li>
-                    <li>Wireshark'ı açıp ağ arayüzümü görebiliyorum</li>
-                    <li>Wireshark'ta paket yakalama testi yaptım</li>
+                    <li>Wireshark kuruldu ve paket yakalama testi yaptım</li>
                 </ul>
 
                 <h3>🎓 Öğrendiklerim:</h3>
                 <ul class="checklist">
-                    <li>IP adresi ve DNS kavramlarını anladım</li>
-                    <li>Ping ve latency kavramlarını öğrendim</li>
-                    <li>Router ve hop kavramlarını biliyorum</li>
-                    <li>HTTP istek/yanıt yapısını anladım</li>
-                    <li>HTTP ve HTTPS arasındaki farkı biliyorum</li>
-                    <li>Paket analizinin ne işe yaradığını biliyorum</li>
+                    <li>MAC ve IP adresi arasındaki farkı anladım</li>
+                    <li>TCP ve UDP arasındaki farkı biliyorum</li>
+                    <li>DNS ve HTTP'nin ne işe yaradığını anladım</li>
+                    <li>Wireshark ile temel filtreleme yapabiliyorum</li>
                 </ul>
-
-                <div class="tip-box">
-                    Tüm kontrolleri geçtiyseniz, atölyeye hazırsınız! Herhangi bir sorun yaşarsanız, kulübün Discord kanalından destek alabilirsiniz.
-                </div>
             </div>
 
             <!-- Yararlı Kaynaklar -->
@@ -880,27 +848,10 @@ Content-Length: 1270<br>
                         <h2>Yararlı Kaynaklar ve Daha Fazla Öğren</h2>
                     </div>
                 </div>
-
-                <h3>🌐 Online Kaynaklar:</h3>
                 <ul>
-                    <li><a href="https://www.cloudflare.com/learning/" target="_blank">Cloudflare Learning Center</a> - Ağ ve internet kavramları</li>
+                    <li><a href="https://www.cloudflare.com/learning/" target="_blank">Cloudflare Learning Center</a></li>
                     <li><a href="https://www.wireshark.org/docs/" target="_blank">Wireshark Resmi Dokümantasyonu</a></li>
                     <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP" target="_blank">MDN Web Docs - HTTP</a></li>
-                    <li><a href="https://tools.ietf.org/" target="_blank">IETF RFCs</a> - İnternet standartları</li>
-                </ul>
-
-                <h3>🎮 İnteraktif Öğrenme:</h3>
-                <ul>
-                    <li><a href="https://www.khanacademy.org/computing/computers-and-internet" target="_blank">Khan Academy - Internet 101</a></li>
-                    <li><a href="https://tryhackme.com/room/networkfundamentals" target="_blank">TryHackMe - Network Fundamentals</a></li>
-                    <li><a href="https://packetlife.net/library/cheat-sheets/" target="_blank">PacketLife Cheat Sheets</a></li>
-                </ul>
-
-                <h3>📺 Video Kaynakları:</h3>
-                <ul>
-                    <li>YouTube: NetworkChuck - Networking temelleri</li>
-                    <li>YouTube: Professor Messer - Network+ dersleri</li>
-                    <li>YouTube: David Bombal - Pratik ağ uygulamaları</li>
                 </ul>
             </div>
 

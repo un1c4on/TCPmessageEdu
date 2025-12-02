@@ -145,7 +145,7 @@ async def handle_http_request(reader: asyncio.StreamReader, writer: asyncio.Stre
     try:
         await reader.readuntil(b'\r\n\r\n')
 
-        if os.path.exists("index.html"):
+        if os.path.exists("sohbet.html"):
             with open("index.html", "r", encoding="utf-8") as f:
                 html_content = f.read()
             
