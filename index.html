@@ -532,6 +532,9 @@ Windows IP Configuration
    Default Gateway . . . . . : 192.168.1.1
                     </div>
                 </div>
+				<div class="tip-box">
+					IP adresiniz ve Alt Ağ Maskesi (Subnet Mask) ile ağınızın boyutunu anlayabilirsiniz. Farklı IP'ler ve subnet maskeleri ile denemeler yapmak için <a href="http://subnetivp4.com/" target="_blank">subnetivp4.com</a> gibi online hesaplayıcıları kullanabilirsiniz.
+				</div>
 
                 <h4>2. Hedefe Erişimi Test Etme: <code>ping</code></h4>
                 <p><code>ping</code>, hedefe küçük bir paket gönderir ve geri dönüş süresini (gecikme/latency) ölçer. Bağlantı sorunlarını teşhis etmek için ilk adımdır.</p>
@@ -607,6 +610,31 @@ Tracing route to google.com [142.250.185.46] over a maximum of 30 hops:
                         <td>Online Oyunlar, Video Konferans (Zoom), DNS</td>
                     </tr>
                 </table>
+
+				<h3>📦 Bir TCP Paketinin İçinde Ne Var?</h3>
+				<p>Bir TCP paketi (veya segmenti), verinin kendisinden önce gelen bir başlık (header) içerir. Bu başlık, bağlantıyı yönetmek için kritik bilgiler taşır:</p>
+				<table>
+					<tr>
+						<th>Alan (Field)</th>
+						<th>Açıklama</th>
+					</tr>
+					<tr>
+						<td><strong>Kaynak ve Hedef Port</strong></td>
+						<td>Verinin hangi uygulamadan gelip hangi uygulamaya gideceğini belirtir.</td>
+					</tr>
+					<tr>
+						<td><strong>Sıra Numarası (Sequence Number)</strong></td>
+						<td>Veri akışındaki paketin yerini belirtir, böylece alıcı onları doğru sıraya koyabilir.</td>
+					</tr>
+					<tr>
+						<td><strong>Onay Numarası (Acknowledgement Number)</strong></td>
+						<td>Alıcının bir sonraki beklediği paketin numarasını göndericiye bildirir.</td>
+					</tr>
+					<tr>
+						<td><strong>Bayraklar (Flags)</strong></td>
+						<td>Bağlantının durumunu yöneten bitlerdir (Örn: SYN, ACK, FIN).</td>
+					</tr>
+				</table>
             
                 <h3>🤝 TCP 3-Yönlü El Sıkışma (3-Way Handshake)</h3>
                 <p>TCP'nin güvenilir bir bağlantıyı nasıl başlattığını gösteren temel süreçtir. İki bilgisayarın konuşmaya başlamadan önce anlaştığı bir "merhabalaşma" ritüelidir.</p>
@@ -640,6 +668,7 @@ Tracing route to google.com [142.250.185.46] over a maximum of 30 hops:
                 <h3>🛠️ Kullanacağımız Araçlar:</h3>
                 <div>
                     <span class="tool-badge">nslookup</span>
+                    <span class="tool-badge">curl</span>
                     <span class="tool-badge">Tarayıcı Geliştirici Araçları (F12)</span>
                 </div>
 
@@ -686,30 +715,24 @@ Addresses:  142.250.185.46
                     Tarayıcınızda <strong>F12</strong> tuşuna basarak "Geliştirici Araçları"nı açın ve "Ağ" (Network) sekmesine gidin. Bir web sitesini ziyaret ettiğinizde yapılan tüm HTTP isteklerini ve yanıtlarını (başlıklar, durum kodları, içerik) canlı olarak görebilirsiniz.
                 </div>
 
-                <h3> Anatomy of an HTTP Request</h3>
+				<h4>3. Komut Satırından HTTP İstekleri: <code>curl</code></h4>
+                <p><code>curl</code>, komut satırından web sunucularına doğrudan HTTP istekleri göndermenizi sağlayan güçlü bir araçtır. API'leri test etmek ve sunucu yanıtlarını incelemek için harikadır.</p>
                 <div class="command-box">
-                    <div class="output" style="color: #00ff00;">
-GET /sayfa.html HTTP/1.1<br>
-Host: www.example.com<br>
-User-Agent: Mozilla/5.0 ...<br>
-                    </div>
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> curl https://api.github.com</div>
+                    <div class="output"># Sadece BODY (içerik) almak için</div>
+
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> curl -I https://api.github.com</div>
+                    <div class="output"># Sadece HEADERS (başlıklar) almak için (-I, --head)</div>
+
+                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> curl -X POST -H "Content-Type: application/json" -d "{\"name\":\"test\"}" https://httpbin.org/post</div>
+                    <div class="output"># JSON formatında bir BODY gönderen POST isteği</div>
                 </div>
-            
-                <h3> Anatomy of an HTTP Response</h3>
-                <div class="command-box">
-                    <div class="output" style="color: #00ff00;">
-HTTP/1.1 200 OK<br>
-Content-Type: text/html<br>
-<br>
-&lt;h1&gt;Merhaba Dünya!&lt;/h1&gt;
-                    </div>
-                </div>
-            
+
                 <h3>🎯 Atölye Görevleri:</h3>
                 <ul class="checklist">
                     <li>Favori web sitenizin IP adresini <code>nslookup</code> ile bulun.</li>
                     <li>Tarayıcınızın Ağ sekmesinde bir siteye girerken kaç tane HTTP isteği yapıldığını sayın.</li>
-                    <li>Bir resmin <code>GET</code> isteğini bulun ve durum kodunun <code>200 OK</code> olduğunu doğrulayın.</li>
+                    <li><code>curl -I google.com</code> komutu ile gelen başlıkları inceleyin.</li>
                 </ul>
             </div>
 
@@ -798,13 +821,6 @@ Content-Type: text/html<br>
                         <h2>Bonus: İleri Seviye Araçlar</h2>
                         <span class="duration">⏱️ İsteğe bağlı</span>
                     </div>
-                </div>
-
-                <h3>🚀 curl - HTTP İstekleri için Komut Satırı Aracı</h3>
-                <p>Web sitelerine tarayıcı kullanmadan istek gönderin. API'leri test etmek için harikadır.</p>
-                <div class="command-box">
-                    <div class="command-line"><span class="prompt">C:\Users\Network101></span> curl -I https://api.github.com</div>
-                    <div class="output"># Sadece başlıkları (headers) al</div>
                 </div>
 
                 <h3>🌐 route - Yönlendirme Tablosu</h3>
