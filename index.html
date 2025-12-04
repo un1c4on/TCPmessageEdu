@@ -385,7 +385,7 @@
         <div class="content">
             <div class="intro">
                 <h2>👋 Hoş Geldiniz!</h2>
-                <p>NEXSUS Yazılım Kulübümüzün "Network 101" atölyesine hoş geldiniz! Bu rehber, atölye sırasında kullanacağımız tüm araçları Windows bilgisayarınıza kurmanıza ve temel komutları denemenize yardımcı olmak için hazırlandı. İnternetin nasıl çalıştığını, veri paketlerinin nasıl yolculuk ettiğini ve ağ güvenliğinin temellerini birlikte keşfedeceğiz.</p>
+                <p>NEXSUS Yazılım Kulübümüzün "Network 101" atölyesine hoş geldiniz! Bu rehber, atölye sırasında kullanacağımız tüm araçları Windows, Linux ve macOS bilgisayarınıza kurmanıza ve temel komutları denemenize yardımcı olmak için hazırlandı. İnternetin nasıl çalıştığını, veri paketlerinin nasıl yolculuk ettiğini ve ağ güvenliğinin temellerini birlikte keşfedeceğiz.</p>
                 <p><strong>🎯 Hedefimiz:</strong> Bu atölyenin sonunda, ağ iletişiminin temel prensiplerini anlayacak ve profesyonel ağ araçlarını kullanabileceksiniz!</p>
             </div>
 
@@ -442,6 +442,14 @@
 
                 <h3>💻 Pratik Uygulamalar:</h3>
                 <h4>1. MAC Adresinizi Bulma</h4>
+                <p>Ağ bağdaştırıcınızın "Fiziksel Adresini" (MAC adresi) bulmak için işletim sisteminize uygun komutu kullanın.</p>
+                
+                <div class="info-box">
+                    <strong>Windows:</strong> <code>ipconfig /all</code> komutu, "Physical Address" satırında MAC adresinizi gösterir.<br>
+                    <strong>Linux:</strong> <code>ip addr</code> veya <code>ifconfig</code> komutunu kullanın. Çıktıda "link/ether" veya "HWaddr" olarak görünür.<br>
+                    <strong>macOS:</strong> <code>ifconfig</code> komutunu kullanın. Çıktıda "ether" olarak görünür.
+                </div>
+
                 <p><code>ipconfig /all</code> komutu, IP adresi bilgilerinin yanı sıra her ağ bağdaştırıcısının "Physical Address" yani MAC adresini de listeler.</p>
                 <div class="command-box">
                     <div class="command-line"><span class="prompt">C:\Users\Network101></span> ipconfig /all</div>
@@ -522,7 +530,12 @@ Interface: 192.168.1.100 --- 0x15
                 </table>
 
                 <h3>💻 Pratik Uygulamalar:</h3>
-                <h4>1. Ağ Yapılandırmanızı Görüntüleme: <code>ipconfig</code></h4>
+                <h4>1. Ağ Yapılandırmanızı Görüntüleme</h4>
+                <div class="info-box">
+                    <strong>Windows:</strong> <code>ipconfig</code><br>
+                    <strong>Linux:</strong> <code>ip addr show</code> veya <code>ifconfig</code><br>
+                    <strong>macOS:</strong> <code>ifconfig</code>
+                </div>
                 <div class="command-box">
                     <div class="command-line"><span class="prompt">C:\Users\Network101></span> ipconfig</div>
                     <div class="output">
@@ -546,8 +559,12 @@ Reply from 142.250.185.46: bytes=32 time=15ms TTL=117
                     </div>
                 </div>
 
-                <h4>3. Paketin İzlediği Yolu Bulma: <code>tracert</code></h4>
+                <h4>3. Paketin İzlediği Yolu Bulma</h4>
                 <p>Veri paketlerinizin hedefe ulaşmak için hangi router'lardan geçtiğini adım adım gösterir.</p>
+                <div class="info-box">
+                    <strong>Windows:</strong> <code>tracert google.com</code><br>
+                    <strong>Linux/macOS:</strong> <code>traceroute google.com</code>
+                </div>
                 <div class="command-box">
                     <div class="command-line"><span class="prompt">C:\Users\Network101></span> tracert google.com</div>
                     <div class="output">
@@ -562,8 +579,12 @@ Tracing route to google.com [142.250.185.46] over a maximum of 30 hops:
                     Bazı router'lar güvenlik nedeniyle ICMP paketlerine yanıt vermez (* * * olarak görünür). Bu normal bir durumdur.
                 </div>
 
-                <h4>4. Gelişmiş Ağ Tanılama: <code>pathping</code></h4>
-                <p><code>pathping</code>, <code>ping</code> ve <code>tracert</code>'in birleşimidir. Her bir router'daki paket kaybını ve gecikmeyi daha detaylı analiz eder (bu komut birkaç dakika sürebilir).</p>
+                <h4>4. Gelişmiş Ağ Tanılama</h4>
+                <p><code>pathping</code> ve benzeri araçlar, <code>ping</code> ve <code>tracert</code>'in birleşimidir. Her bir router'daki paket kaybını ve gecikmeyi daha detaylı analiz eder (bu komutlar birkaç dakika sürebilir).</p>
+                <div class="info-box">
+                    <strong>Windows:</strong> <code>pathping google.com</code><br>
+                    <strong>Linux/macOS:</strong> <code>mtr google.com</code> (Eğer yüklü değilse, <code>sudo apt-get install mtr</code> veya <code>brew install mtr</code> ile kurabilirsiniz.)
+                </div>
                 <div class="command-box">
                     <div class="command-line"><span class="prompt">C:\Users\Network101></span> pathping google.com</div>
                 </div>
@@ -823,8 +844,13 @@ Addresses:  142.250.185.46
                     </div>
                 </div>
 
-                <h3>🌐 route - Yönlendirme Tablosu</h3>
+                <h3>🌐 Yönlendirme Tablosu Görüntüleme</h3>
                 <p>Bilgisayarınızın paketleri hangi ağ geçidine (gateway) göndereceğini nasıl bildiğini gösteren tablodur.</p>
+                <div class="info-box">
+                    <strong>Windows:</strong> <code>route print</code><br>
+                    <strong>Linux:</strong> <code>ip route</code> veya <code>netstat -r</code><br>
+                    <strong>macOS:</strong> <code>netstat -r</code>
+                </div>
                 <div class="command-box">
                     <div class="command-line"><span class="prompt">C:\Users\Network101></span> route print</div>
                 </div>
@@ -841,7 +867,7 @@ Addresses:  142.250.185.46
 
                 <h3>📋 Kurulum Kontrolleri:</h3>
                 <ul class="checklist">
-                    <li>Komut İstemi'ni açıp <code>ipconfig</code> ve <code>arp -a</code> komutlarını çalıştırabildim</li>
+                    <li>Komut İstemi'ni/Terminali açıp işletim sistemime uygun ağ komutlarını (<code>ipconfig</code>, <code>ifconfig</code>, <code>ip addr</code> vb.) çalıştırabildim</li>
                     <li><code>ping google.com</code> komutu başarıyla çalışıyor</li>
                     <li><code>tracert google.com</code> komutu çalışıyor</li>
                     <li>Wireshark kuruldu ve paket yakalama testi yaptım</li>
